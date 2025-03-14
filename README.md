@@ -1,26 +1,47 @@
-# 🎫 InterMark
-  
-프로그래머스 백엔드 마르코팀 - 인터파크 클론코딩 프로젝트
+# Neopark
+'인터파크 클론코딩 프로젝트 InterMark' 를 타겟으로, 당시에 적용하지 못했던 추가 기능 구현 및 버그, 성능 문제를 발견하고 이를 개선합니다.
+<br></br>
+## 💠 팀원 소개
 
----
+<table>
+  <tr>
+    <th>Developer</th>
+    <th>Developer</th>
+    <th>Developer</th>
+    <th>Developer</th>
+  </tr>
+  <tr>
+    <td align="center"><img width="120" height="120" src=".github/readme/kimjingyu.png"></td>
+    <td align="center"><img width="120" height="120" src=".github/readme/leesoo.png"></td>
+    <td align="center"><img width="120" height="120" src=".github/readme/leejieum.png"></td>
+    <td align="center"><img width="120" height="120" src=".github/readme/imjinmuk.png"></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/km1031kim">김진규</a></td>
+    <td align="center"><a href="https://github.com/SooLee99">이수</a></td>
+    <td align="center"><a href="https://github.com/JiELee1">이지은</a></td>
+    <td align="center"><a href="https://github.com/Mukjin">임진묵</a></td>
+  </tr>
+</table>
 
-## 🧑‍🤝‍🧑 팀원 소개
+<br></br>
+## 💠 프로젝트 목표
 
-| Product Owner                                                            | Scrum Master                                                            | Developer                                                               | Developer                                                              | Developer                                                             |
-|--------------------------------------------------------------------------|-------------------------------------------------------------------------|-------------------------------------------------------------------------|------------------------------------------------------------------------|-----------------------------------------------------------------------|
-| <img width="120" height="120" src=".github/readme/profile/seongjun.png"> | <img width="120" height="120" src=".github/readme/profile/suyoung.jpg"> | <img width="120" height="120" src=".github/readme/profile/taehyun.png"> | <img width="120" height="120" src=".github/readme/profile/sohyun.jpg"> | <img width="120" height="120" src=".github/readme/profile/sejun.jpg"> |
-| [권성준](https://github.com/Seongjun-Kwon)                                  | [이수영](https://github.com/twotwobread)                                   | [공태현](https://github.com/rhdtn311)                                      | [김소현](https://github.com/thguss)                                       | [박세준](https://github.com/park-se-jun)                                 |
+- 티켓팅 서비스 경험
+- 깃 협업 경험
+- Git Flow 브랜치 전략 사용
+- 코드 컨벤션 통합
+- 스프링 부트 버전 업그레이드(2.7.7 → 3.4.3)
+- 성능 최적화 및 트러블 슈팅 해결
+- Redis 이용한 동시성 처리
+- API 문서 작성
+- CI/CD 파이프라인 구축
 
-| Mentor | Sub Mentor |
-|--------|------------|
-| [마르코](https://github.com/ksy90101) | [김명환](https://github.com/samkimuel) |
-
-## 🥅 프로젝트 목표
-
-- 인터파크와 같은 티켓팅 서비스를 구현하는 목표를 가지고 있습니다.
-- 협업 경험이 없는 팀원들이 많은 만큼 협업에 대한 감을 잡고자 합니다.
-
-## 🧰 개발 언어 및 활용기술
+<br></br>
+## 💠 AS IS 프로젝트 정보
+<details>
+  <summary>intermark 프로젝트</summary>
+##  개발 언어 및 활용기술
 
 ### 1. 백엔드
 | <img width="80" height="80" src=".github/readme/java.png"> | <img width="100" height="80" src=".github/readme/gradle.png"> | <code><img height="80" src="https://user-images.githubusercontent.com/25181517/183891303-41f257f8-6b3d-487c-aa56-c497b880d0fb.png" alt="Spring Boot" title="Spring Boot" /></code> | <img width="120" height="80" src=".github/readme/jpa.png"> |
@@ -55,7 +76,7 @@
 
 <img src=".github/readme/erd.png">  
 
-## 📜 API 정의서 및 문서화
+## 📜 API 정의서 및 문서
 
 - [API 정의서](https://www.notion.so/backend-devcourse/API-827d93da3bc24f72a8dde9552db46a30)는 링크를 통해 확인할 수 있습니다.
 - API 문서화는 RestDocs를 이용했으며 `/document` url path로 접근 시 확인할 수 있습니다.
@@ -90,11 +111,11 @@
 - 브랜치 관리 전략은 git flow를 사용합니다.
   <img src=".github/readme/git-flow.png">
 - git을 이용한 협업에 능숙하지 못한 팀원들이 많아 최대한 적은 브랜치 개수를 이용하고자 했습니다.
-  - develop : 개발 및 배포 브랜치
-  - main : 프로젝트 초기 환경 브랜치
-  - 각 이슈에 대한 브랜치를 생성합니다.
-    - 타입/개발자이름_이슈번호 (이슈에 대한 브랜치 타입은 feature 하나로 통일했습니다.)
-    - ex) feature/홍길동_#13
+    - develop : 개발 및 배포 브랜치
+    - main : 프로젝트 초기 환경 브랜치
+    - 각 이슈에 대한 브랜치를 생성합니다.
+        - 타입/개발자이름_이슈번호 (이슈에 대한 브랜치 타입은 feature 하나로 통일했습니다.)
+        - ex) feature/홍길동_#13
 
 ### 4. 회고
 
@@ -107,3 +128,13 @@
 ### 6. 프로젝트 트러블 슈팅 문서
 
 - [프로젝트 트러블 슈팅](https://www.notion.so/backend-devcourse/08a650ceaa7e4c4a8cf9f53f77d453b8)
+</details>
+
+<br></br>
+## 💠 TO BE 프로젝트 정보
+
+
+<br></br>
+## 💠 스프린트 및 스크럼
+- [스프린트 및 스크럼](https://www.notion.so/goormkdx/1b6c0ff4ce3180329ceccdf679b0af93)
+
