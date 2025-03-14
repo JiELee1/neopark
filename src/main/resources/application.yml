@@ -1,22 +1,26 @@
+jwt:
+  secret:
+    access: "w7uGmFxgOlFS9T+gFynHk7jB6mI/eA9WgjG5o9gB8uI="
+    refresh: "w7uGmFxgOlFS9T+gFynHk7jB6mI/eA9WgjG5o9gB8uI="
+
 spring:
-# .env 파일을 통해 환경변수를 설정해주고 싶다면 아래의 주석을 해재해 주세요
-  config:
-    import: optional:file:env/spring-deploy.env[.properties]
+  # 환경변수를 통해 설정하는 경우 아래 주석 해제 가능
+  #config:
+  #import: optional:file:env/spring-deploy.env[.properties]
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DATABASE}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
-  security:
-    oauth2:
-      client:
-        registration:
-          google:
-            client-id: ${GOOGLE_CLIENT_ID}
-            client-secret: ${GOOGLE_CLIENT_SECRET}
-            scope: profile,email
-
-
+    url: jdbc:mysql://localhost:3308/mydatabase    # 테스트용 DB URL (실제 테스트 환경에 맞게 수정)
+    username: dbuser                                 # 테스트용 DB 사용자
+    password: dbpassword                             # 테스트용 DB 비밀번호
+  # 보안 관련 설정은 테스트에 필요없으므로 주석 처리
+  # security:
+  #   oauth2:
+  #     client:
+  #       registration:
+  #         google:
+  #           client-id: ${GOOGLE_CLIENT_ID}
+  #           client-secret: ${GOOGLE_CLIENT_SECRET}
+  #           scope: profile,email
   jpa:
     hibernate:
       ddl-auto: none
@@ -26,46 +30,42 @@ spring:
         format_sql: true
     database: mysql
     database-platform: org.hibernate.dialect.MySQL8Dialect
+  # 파일 업로드 및 서블릿 관련 설정은 테스트에서 필요하지 않으므로 주석 처리
+  # servlet:
+  #   multipart:
+  #     enabled: true
+  #     max-file-size: 10MB
+  #     max-request-size: 10MB
+  # mvc:
+  #   hiddenmethod:
+  #     filter:
+  #       enabled: true
 
-  servlet:
-    multipart:
-      enabled: true
-      max-file-size: 10MB
-      max-request-size: 10MB
-  mvc:
-    hiddenmethod:
-      filter:
-        enabled: true
-jwt:
-  secret:
-    access: ${JWT_ACCESS_KEY}
-    refresh: ${JWT_REFRESH_KEY}
-# 로그를 debug 레벨로 보고 싶다면 아래의 주석을 해재해 주세
-#logging:
-#  level:
-#    org.springframework: debug
-#    org.hibernate.SQL: debug
-#    org.hibernate.type: trace
-
-cloud:
-  aws:
-    credentials:
-      accessKey: ${ACCESS_KEY}
-      secretKey: ${SECRET_KEY}
-    s3:
-      bucket:
-        name: ${BUCKET_NAME}
-        url: ${BUCKET_URL}
-    region:
-      static: ap-northeast-2
-    stack:
-      auto: false
-
-local:
-  images:
-    path: ${LOCAL_STORAGE}
-
-file:
-  images: ${LOCAL_STORAGE}
-
-
+# JWT, 클라우드, 로컬 파일 관련 설정은 테스트에 필요없으므로 주석 처리
+# jwt:
+#   secret:
+#     access: ${JWT_ACCESS_KEY}
+#     refresh: ${JWT_REFRESH_KEY}
+# logging:
+#   level:
+#     org.springframework: debug
+#     org.hibernate.SQL: debug
+#     org.hibernate.type: trace
+# cloud:
+#   aws:
+#     credentials:
+#       accessKey: ${ACCESS_KEY}
+#       secretKey: ${SECRET_KEY}
+#     s3:
+#       bucket:
+#         name: ${BUCKET_NAME}
+#         url: ${BUCKET_URL}
+#     region:
+#       static: ap-northeast-2
+#     stack:
+#       auto: false
+# local:
+#   images:
+#     path: ${LOCAL_STORAGE}
+# file:
+#   images: ${LOCAL_STORAGE}

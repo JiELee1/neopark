@@ -2,9 +2,12 @@
 <configuration scan="true">
     <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
 
+    <!-- AWS 관련 설정 주석 처리
     <springProperty name="AWS_ACCESS_KEY" source="cloud.aws.credentials.accessKey"/>
     <springProperty name="AWS_SECRET_KEY" source="cloud.aws.credentials.secretKey"/>
-    <springProperty name ="REGION" source="cloud.aws.region.static"/>
+    <springProperty name="REGION" source="cloud.aws.region.static"/>
+    -->
+
     <property name="LOG_PATTERN"
               value="%clr(%d{yyyyMMdd HH:mm:ss.SSS}){magenta} %clr([%thread]){blue} %clr(%-5level){} %clr([%logger{0}:%line]){cyan} : %msg %n"/>
 
@@ -13,6 +16,8 @@
             <pattern>${LOG_PATTERN}</pattern>
         </encoder>
     </appender>
+
+    <!-- AWS 로그 앱펜더 주석 처리
     <appender name="AWS_LOG" class="ca.pjer.logback.AwsLogsAppender">
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>INFO</level>
@@ -30,9 +35,10 @@
         <accessKeyId>${AWS_ACCESS_KEY}</accessKeyId>
         <secretAccessKey>${AWS_SECRET_KEY}</secretAccessKey>
     </appender>
+    -->
 
     <root level="debug">
         <appender-ref ref="STDOUT"/>
-        <appender-ref ref="AWS_LOG"/>
+        <!-- <appender-ref ref="AWS_LOG"/> -->
     </root>
 </configuration>

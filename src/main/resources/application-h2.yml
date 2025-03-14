@@ -1,3 +1,8 @@
+jwt:
+  secret:
+    access: "w7uGmFxgOlFS9T+gFynHk7jB6mI/eA9WgjG5o9gB8uI="
+    refresh: "w7uGmFxgOlFS9T+gFynHk7jB6mI/eA9WgjG5o9gB8uI="
+
 spring:
   h2:
     console:
@@ -7,10 +12,11 @@ spring:
         web-allow-others: true
 
   datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:${DATABASE};MODE=MYSQL
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3308/mydatabase    # 테스트용 DB URL (실제 테스트 환경에 맞게 수정)
+    username: dbuser                                 # 테스트용 DB 사용자
+    password: dbpassword                             # 테스트용 DB 비밀번호
+
   jpa:
     hibernate:
       ddl-auto: create-drop

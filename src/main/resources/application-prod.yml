@@ -1,6 +1,11 @@
+jwt:
+  secret:
+    access: "w7uGmFxgOlFS9T+gFynHk7jB6mI/eA9WgjG5o9gB8uI="
+    refresh: "w7uGmFxgOlFS9T+gFynHk7jB6mI/eA9WgjG5o9gB8uI="
+
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DATABASE}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    url: jdbc:mysql://localhost:3308/mydatabase
+    username: dbuser
+    password: dbpassword
