@@ -1,7 +1,7 @@
 jwt:
   secret:
-    access: "w7uGmFxgOlFS9T+gFynHk7jB6mI/eA9WgjG5o9gB8uI="
-    refresh: "w7uGmFxgOlFS9T+gFynHk7jB6mI/eA9WgjG5o9gB8uI="
+    access: "w7uGmFxgOlFS9T+gFyiseruy3b974ryiseruvthnHk7jB6mIdgsdrgdfthcfgh/eA9WgjG5o9gB8uI="
+    refresh: "w7uGmFxgOlFS9T+gFyv9o3i8nyies8ntyv9374eytviwudynHk7jB6mI/dcghdftghfgdfgbeA9WgjG5o9gB8uI="
 
 spring:
   h2:
@@ -12,10 +12,10 @@ spring:
         web-allow-others: true
 
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3308/mydatabase    # 테스트용 DB URL (실제 테스트 환경에 맞게 수정)
-    username: dbuser                                 # 테스트용 DB 사용자
-    password: dbpassword                             # 테스트용 DB 비밀번호
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
 
   jpa:
     hibernate:

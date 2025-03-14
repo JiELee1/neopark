@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.prgrms.be.intermark.common.dto.ImageResponseDTO;
 import com.prgrms.be.intermark.common.dto.page.PageListIndexSize;
 import com.prgrms.be.intermark.common.dto.page.PageResponseDTO;
-import com.prgrms.be.intermark.common.service.ImageUploadService;
+//import com.prgrms.be.intermark.common.service.ImageUploadService;
 import com.prgrms.be.intermark.domain.actor.model.Actor;
 import com.prgrms.be.intermark.domain.actor.service.ActorService;
 import com.prgrms.be.intermark.domain.casting.model.Casting;
@@ -51,7 +51,7 @@ public class MusicalFacadeService {
 	private final StadiumService stadiumService;
 	private final UserService userService;
 	private final SeatGradeService seatGradeService;
-	private final ImageUploadService imageUploadService;
+	//private final ImageUploadService imageUploadService;
 	private final MusicalDetailImageService musicalDetailImageService;
 	private final MusicalSeatService musicalSeatService;
 	private final CastingService castingService;
@@ -60,65 +60,65 @@ public class MusicalFacadeService {
 	private final SeatService seatService;
 	private final ActorService actorService;
 
-    @Transactional
-    public Long create(
-            MusicalCreateRequestDTO createRequestDto,
-            MultipartFile thumbnail,
-            List<MultipartFile> detailImages
-    ) {
-        Musical createdMusical = createRequestDto.toEntity();
-
-        ImageResponseDTO thumbnailInfo = imageUploadService.uploadImage(thumbnail,THUMBNAIL_PATH);
-        Stadium stadium = stadiumService.findById(createRequestDto.stadiumId());
-        User manager = userService.findByIdForFacade(createRequestDto.managerId());
-        setMusicalAssociation(createdMusical, thumbnailInfo, stadium, manager);
-        Musical savedMusical = musicalService.save(createdMusical);
-
-        List<ImageResponseDTO> detailImagesInfo = imageUploadService.uploadImages(detailImages,DETAIL_IMAGES_PATH);
-        List<MusicalDetailImage> musicalDetailImages = setMusicalDetailImagesAssociation(detailImagesInfo, savedMusical);
-        musicalDetailImageService.save(musicalDetailImages);
-
-        List<SeatGrade> seatGrades = setSeatGradesAssociation(createRequestDto.seatGrades(), savedMusical);
-        seatGradeService.save(seatGrades);
-
-        List<MusicalSeat> musicalSeats = setMusicalSeatsAssocaition(createRequestDto.seats(), savedMusical);
-        musicalSeatService.save(musicalSeats);
-
-        List<Casting> castings = setCastingsAssociation(createRequestDto.actorIds(), savedMusical);
-        castingService.save(castings);
-
-        return savedMusical.getId();
-    }
-
-    @Transactional
-    public void update(
-            Long musicalId,
-            MusicalUpdateRequestDTO musicalUpdateRequestDTO,
-            MultipartFile thumbnailImage,
-            List<MultipartFile> detailImages
-    ) {
-        Musical musical = musicalService.findMusicalById(musicalId);
-
-        if (scheduleService.existsByMusical(musical)) {
-            throw new IllegalArgumentException("이미 뮤지컬의 스케줄이 존재합니다.");
-        }
-
-        if (ticketService.existsByMusical(musical)) {
-            throw new IllegalArgumentException("이미 예약된 뮤지컬입니다.");
-        }
-
-        ImageResponseDTO thumbnailInfo = imageUploadService.uploadImage(thumbnailImage, THUMBNAIL_PATH);
-        Stadium stadium = stadiumService.findById(musicalUpdateRequestDTO.stadiumId());
-        User manager = userService.findByIdForFacade(musicalUpdateRequestDTO.managerId());
-
-        seatGradeService.update(musicalUpdateRequestDTO.seatGrades(), musical);
-        musicalSeatService.update(musicalUpdateRequestDTO.seats(), musicalUpdateRequestDTO.stadiumId(), musical);
-        castingService.update(musicalUpdateRequestDTO.actors(), musical);
-
-        List<ImageResponseDTO> detailImagesInfo = imageUploadService.uploadImages(detailImages, DETAIL_IMAGES_PATH);
-        musicalDetailImageService.update(detailImagesInfo, musical);
-        musicalService.updateMusical(musical, musicalUpdateRequestDTO, thumbnailInfo.path(), stadium, manager);
-    }
+//    @Transactional
+//    public Long create(
+//            MusicalCreateRequestDTO createRequestDto,
+//            MultipartFile thumbnail,
+//            List<MultipartFile> detailImages
+//    ) {
+//        Musical createdMusical = createRequestDto.toEntity();
+//
+//        ImageResponseDTO thumbnailInfo = imageUploadService.uploadImage(thumbnail,THUMBNAIL_PATH);
+//        Stadium stadium = stadiumService.findById(createRequestDto.stadiumId());
+//        User manager = userService.findByIdForFacade(createRequestDto.managerId());
+//        setMusicalAssociation(createdMusical, thumbnailInfo, stadium, manager);
+//        Musical savedMusical = musicalService.save(createdMusical);
+//
+//        List<ImageResponseDTO> detailImagesInfo = imageUploadService.uploadImages(detailImages,DETAIL_IMAGES_PATH);
+//        List<MusicalDetailImage> musicalDetailImages = setMusicalDetailImagesAssociation(detailImagesInfo, savedMusical);
+//        musicalDetailImageService.save(musicalDetailImages);
+//
+//        List<SeatGrade> seatGrades = setSeatGradesAssociation(createRequestDto.seatGrades(), savedMusical);
+//        seatGradeService.save(seatGrades);
+//
+//        List<MusicalSeat> musicalSeats = setMusicalSeatsAssocaition(createRequestDto.seats(), savedMusical);
+//        musicalSeatService.save(musicalSeats);
+//
+//        List<Casting> castings = setCastingsAssociation(createRequestDto.actorIds(), savedMusical);
+//        castingService.save(castings);
+//
+//        return savedMusical.getId();
+//    }
+//
+//    @Transactional
+//    public void update(
+//            Long musicalId,
+//            MusicalUpdateRequestDTO musicalUpdateRequestDTO,
+//            MultipartFile thumbnailImage,
+//            List<MultipartFile> detailImages
+//    ) {
+//        Musical musical = musicalService.findMusicalById(musicalId);
+//
+//        if (scheduleService.existsByMusical(musical)) {
+//            throw new IllegalArgumentException("이미 뮤지컬의 스케줄이 존재합니다.");
+//        }
+//
+//        if (ticketService.existsByMusical(musical)) {
+//            throw new IllegalArgumentException("이미 예약된 뮤지컬입니다.");
+//        }
+//
+//        ImageResponseDTO thumbnailInfo = imageUploadService.uploadImage(thumbnailImage, THUMBNAIL_PATH);
+//        Stadium stadium = stadiumService.findById(musicalUpdateRequestDTO.stadiumId());
+//        User manager = userService.findByIdForFacade(musicalUpdateRequestDTO.managerId());
+//
+//        seatGradeService.update(musicalUpdateRequestDTO.seatGrades(), musical);
+//        musicalSeatService.update(musicalUpdateRequestDTO.seats(), musicalUpdateRequestDTO.stadiumId(), musical);
+//        castingService.update(musicalUpdateRequestDTO.actors(), musical);
+//
+//        List<ImageResponseDTO> detailImagesInfo = imageUploadService.uploadImages(detailImages, DETAIL_IMAGES_PATH);
+//        musicalDetailImageService.update(detailImagesInfo, musical);
+//        musicalService.updateMusical(musical, musicalUpdateRequestDTO, thumbnailInfo.path(), stadium, manager);
+//    }
 
     @Transactional(readOnly = true)
     public PageResponseDTO<Musical, MusicalSummaryResponseDTO> findAllMusicals(Pageable pageable) {

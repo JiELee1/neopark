@@ -27,9 +27,9 @@ import static com.prgrms.be.intermark.auth.constant.JwtConstants.*;
 public class TokenProvider {
 
     // TODO: jwt secret key를 application.yml에 저장하고 불러오기
-    @Value("VGVzdEtleUZvclRlc3Rz")
+    @Value("${jwt.secret.access}")
     private String ACCESS_SECRET_KEY;
-    @Value("$VGVzdEtleUZvclRlc3Rz")
+    @Value("${jwt.secret.refresh}")
     private String REFRESH_SECRET_KEY;
 
     private Key accessKey;

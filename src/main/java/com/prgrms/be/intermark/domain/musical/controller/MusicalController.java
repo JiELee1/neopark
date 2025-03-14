@@ -34,43 +34,43 @@ import lombok.RequiredArgsConstructor;
 public class MusicalController {
 
 	private final MusicalFacadeService musicalFacadeService;
-
-	@PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
-	public ResponseEntity<Void> createMusical(
-		@RequestPart @Valid MusicalCreateRequestDTO createRequestDto,
-		@RequestPart(required = false) MultipartFile thumbnail,
-		@RequestPart(required = false) List<MultipartFile> detailImages
-	) {
-		Long musicalId = musicalFacadeService.create(createRequestDto, thumbnail, detailImages);
-		URI location = URI.create("/api/v1/musicals/" + musicalId);
-		return ResponseEntity.created(location).build();
-	}
-
-	@GetMapping
-	public ResponseEntity<PageResponseDTO<Musical, MusicalSummaryResponseDTO>> getAllMusicals(Pageable pageable) {
-		PageResponseDTO<Musical, MusicalSummaryResponseDTO> musicals = musicalFacadeService.findAllMusicals(pageable);
-
-		return ResponseEntity.ok(musicals);
-	}
-
-	@GetMapping("/{musicalId}")
-	public ResponseEntity<MusicalDetailResponseDTO> getMusical(@PathVariable Long musicalId) {
-		MusicalDetailResponseDTO musical = musicalFacadeService.findMusicalById(musicalId);
-
-		return ResponseEntity.ok(musical);
-	}
-
-	@PutMapping(value = "/{musicalId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
-	public ResponseEntity<Void> updateMusical(
-			@PathVariable Long musicalId,
-			@RequestPart @Valid MusicalUpdateRequestDTO musicalUpdateRequestDTO,
-			@RequestPart MultipartFile thumbnail,
-			@RequestPart List<MultipartFile> detailImages
-	) {
-		musicalFacadeService.update(musicalId, musicalUpdateRequestDTO, thumbnail, detailImages);
-
-		return ResponseEntity.noContent().build();
-	}
+//
+//	@PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
+//	public ResponseEntity<Void> createMusical(
+//		@RequestPart @Valid MusicalCreateRequestDTO createRequestDto,
+//		@RequestPart(required = false) MultipartFile thumbnail,
+//		@RequestPart(required = false) List<MultipartFile> detailImages
+//	) {
+//		Long musicalId = musicalFacadeService.create(createRequestDto, thumbnail, detailImages);
+//		URI location = URI.create("/api/v1/musicals/" + musicalId);
+//		return ResponseEntity.created(location).build();
+//	}
+//
+//	@GetMapping
+//	public ResponseEntity<PageResponseDTO<Musical, MusicalSummaryResponseDTO>> getAllMusicals(Pageable pageable) {
+//		PageResponseDTO<Musical, MusicalSummaryResponseDTO> musicals = musicalFacadeService.findAllMusicals(pageable);
+//
+//		return ResponseEntity.ok(musicals);
+//	}
+//
+//	@GetMapping("/{musicalId}")
+//	public ResponseEntity<MusicalDetailResponseDTO> getMusical(@PathVariable Long musicalId) {
+//		MusicalDetailResponseDTO musical = musicalFacadeService.findMusicalById(musicalId);
+//
+//		return ResponseEntity.ok(musical);
+//	}
+//
+//	@PutMapping(value = "/{musicalId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
+//	public ResponseEntity<Void> updateMusical(
+//			@PathVariable Long musicalId,
+//			@RequestPart @Valid MusicalUpdateRequestDTO musicalUpdateRequestDTO,
+//			@RequestPart MultipartFile thumbnail,
+//			@RequestPart List<MultipartFile> detailImages
+//	) {
+//		musicalFacadeService.update(musicalId, musicalUpdateRequestDTO, thumbnail, detailImages);
+//
+//		return ResponseEntity.noContent().build();
+//	}
 
 	@DeleteMapping("/{musicalId}")
 	public ResponseEntity<Void> deleteMusical(@PathVariable Long musicalId) {
