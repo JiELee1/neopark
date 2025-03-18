@@ -4,18 +4,24 @@ jwt:
     refresh: "w7uGmFxgOlFS9T+gFyv9o3i8nyies8ntyv9374eytviwudynHk7jB6mI/dcghdftghfgdfgbeA9WgjG5o9gB8uI="
 
 spring:
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-      settings:
-        web-allow-others: true
+#  h2:
+#    console:
+#      enabled: true
+#      path: /h2-console
+#      settings:
+#        web-allow-others: true
+#
+#  datasource:
+#    url: jdbc:h2:mem:testdb
+#    driver-class-name: org.h2.Driver
+#    username: sa
+#    password:
 
   datasource:
-    url: jdbc:h2:mem:testdb
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3386/neopark    # 테스트용 DB URL (실제 테스트 환경에 맞게 수정)
+    username: neo                                 # 테스트용 DB 사용자
+    password: neo                             # 테스트용 DB 비밀번호
 
   jpa:
     hibernate:
@@ -24,3 +30,14 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
     generate-ddl: true
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id:
+            client-secret:
+            scope:
+    profiles:
+      include: oauth
