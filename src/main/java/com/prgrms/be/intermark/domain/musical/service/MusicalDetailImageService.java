@@ -16,32 +16,32 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MusicalDetailImageService {
 
-    private final MusicalDetailImageRepository musicalDetailImageRepository;
+	private final MusicalDetailImageRepository musicalDetailImageRepository;
 
-    @Transactional
-    public void save(List<MusicalDetailImage> musicalDetailImages) {
-        musicalDetailImages.forEach(musicalDetailImageRepository::save);
-    }
+	@Transactional
+	public void save(List<MusicalDetailImage> musicalDetailImages) {
+		musicalDetailImageRepository.saveAll(musicalDetailImages);
+	}
 
-    public void update(List<ImageResponseDTO> imageResponseDTOs, Musical musical) {
-        musicalDetailImageRepository.deleteByMusical(musical);
+	public void update(List<ImageResponseDTO> imageResponseDTOs, Musical musical) {
+		musicalDetailImageRepository.deleteByMusical(musical);
 
-        imageResponseDTOs.forEach(
-                imageResponse -> {
-                    MusicalDetailImage detailImage = MusicalDetailImage.builder()
-                            .originalFileName(imageResponse.originalFileName())
-                            .imageUrl(imageResponse.path())
-                            .build();
-                    detailImage.setMusical(musical);
+		imageResponseDTOs.forEach(
+			imageResponse -> {
+				MusicalDetailImage detailImage = MusicalDetailImage.builder()
+					.originalFileName(imageResponse.originalFileName())
+					.imageUrl(imageResponse.path())
+					.build();
+				detailImage.setMusical(musical);
 
-                    musicalDetailImageRepository.save(detailImage);
-                }
-        );
-    }
+				musicalDetailImageRepository.save(detailImage);
+			}
+		);
+	}
 
-    @Transactional
-    public void deleteAllByMusical(Musical musical) {
-        musicalDetailImageRepository.findByMusicalAndIsDeletedIsFalse(musical)
-            .forEach(MusicalDetailImage::deleteMusicalDetailImage);
-    }
+	@Transactional
+	public void deleteAllByMusical(Musical musical) {
+		musicalDetailImageRepository.findByMusicalAndIsDeletedIsFalse(musical)
+			.forEach(MusicalDetailImage::deleteMusicalDetailImage);
+	}
 }

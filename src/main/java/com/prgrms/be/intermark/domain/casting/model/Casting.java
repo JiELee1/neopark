@@ -29,52 +29,52 @@ import lombok.NoArgsConstructor;
 @Getter
 public class Casting {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Column(name = "is_deleted", nullable = false)
-    private boolean isDeleted;
+	@Column(name = "is_deleted", nullable = false)
+	private boolean isDeleted;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "actor_id", referencedColumnName = "id", nullable = false)
-    private Actor actor;
+	@NotNull
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "actor_id", referencedColumnName = "id", nullable = false)
+	private Actor actor;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "musical_id", referencedColumnName = "id", nullable = false)
-    private Musical musical;
+	@NotNull
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "musical_id", referencedColumnName = "id", nullable = false)
+	private Musical musical;
 
-    @Builder
-    public Casting(Actor actor, Musical musical) {
-        this.isDeleted = false;
-        this.actor = actor;
-        this.musical = musical;
-    }
+	@Builder
+	public Casting(Actor actor, Musical musical) {
+		this.isDeleted = false;
+		this.actor = actor;
+		this.musical = musical;
+	}
 
-    public void deleteCasting() {
-        this.isDeleted = true;
-    }
+	public void deleteCasting() {
+		this.isDeleted = true;
+	}
 
-    public void setActor(Actor actor) {
-        Assert.notNull(actor, "actor cannot be null");
+	public void setActor(Actor actor) {
+		Assert.notNull(actor, "actor cannot be null");
 
-        if (Objects.nonNull(this.actor)) {
-            this.actor.getCastings().remove(this);
-        }
-        this.actor = actor;
-        actor.getCastings().add(this);
-    }
+		if (Objects.nonNull(this.actor)) {
+			this.actor.getCastings().remove(this);
+		}
+		this.actor = actor;
+		actor.getCastings().add(this);
+	}
 
-    public void setMusical(Musical musical) {
-        Assert.notNull(musical, "musical cannot be null");
+	public void setMusical(Musical musical) {
+		Assert.notNull(musical, "musical cannot be null");
 
-        if (Objects.nonNull(this.musical)) {
-            this.musical.getCastings().remove(this);
-        }
+		if (Objects.nonNull(this.musical)) {
+			this.musical.getCastings().remove(this);
+		}
 
-        this.musical = musical;
-        musical.getCastings().add(this);
-    }
+		this.musical = musical;
+		musical.getCastings().add(this);
+	}
 }

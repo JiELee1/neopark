@@ -16,18 +16,18 @@ import lombok.Builder;
 
 @Builder
 public record MusicalUpdateRequestDTO(
-        @NotBlank String title,
-        @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
-        @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
-        @NotBlank String description,
-        @NotNull ViewRating viewRating,
-        @NotNull Genre genre,
-        @NotNull @Positive int runningTime,
-        @NotNull Long managerId,
-        @NotNull @Positive Long stadiumId,
-        @NotNull List<Long> actors,
-        @NotNull List<MusicalSeatGradeUpdateRequestDTO> seatGrades,
-        @NotNull List<MusicalSeatUpdateRequestDTO> seats
+	@NotBlank String title,
+	@DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+	@DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
+	@NotBlank String description,
+	@NotNull ViewRating viewRating,
+	@NotNull Genre genre,
+	@NotNull @Positive int runningTime,
+	@NotNull Long managerId,
+	@NotNull @Positive Long stadiumId,
+	@NotNull List<Long> actors,
+	@NotNull List<MusicalSeatGradeUpdateRequestDTO> seatGrades,
+	@NotNull List<MusicalSeatUpdateRequestDTO> seats
 ) {
 
 }

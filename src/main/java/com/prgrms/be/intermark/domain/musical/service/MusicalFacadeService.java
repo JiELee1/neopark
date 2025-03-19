@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.prgrms.be.intermark.common.dto.ImageResponseDTO;
 import com.prgrms.be.intermark.common.dto.page.PageListIndexSize;
 import com.prgrms.be.intermark.common.dto.page.PageResponseDTO;
-//import com.prgrms.be.intermark.common.service.ImageUploadService;
+import com.prgrms.be.intermark.common.service.ImageUploadService;
 import com.prgrms.be.intermark.domain.actor.model.Actor;
 import com.prgrms.be.intermark.domain.actor.service.ActorService;
 import com.prgrms.be.intermark.domain.casting.model.Casting;
@@ -51,7 +51,7 @@ public class MusicalFacadeService {
 	private final StadiumService stadiumService;
 	private final UserService userService;
 	private final SeatGradeService seatGradeService;
-	//private final ImageUploadService imageUploadService;
+	private final ImageUploadService imageUploadService;
 	private final MusicalDetailImageService musicalDetailImageService;
 	private final MusicalSeatService musicalSeatService;
 	private final CastingService castingService;
@@ -60,158 +60,172 @@ public class MusicalFacadeService {
 	private final SeatService seatService;
 	private final ActorService actorService;
 
-//    @Transactional
-//    public Long create(
-//            MusicalCreateRequestDTO createRequestDto,
-//            MultipartFile thumbnail,
-//            List<MultipartFile> detailImages
-//    ) {
-//        Musical createdMusical = createRequestDto.toEntity();
-//
-//        ImageResponseDTO thumbnailInfo = imageUploadService.uploadImage(thumbnail,THUMBNAIL_PATH);
-//        Stadium stadium = stadiumService.findById(createRequestDto.stadiumId());
-//        User manager = userService.findByIdForFacade(createRequestDto.managerId());
-//        setMusicalAssociation(createdMusical, thumbnailInfo, stadium, manager);
-//        Musical savedMusical = musicalService.save(createdMusical);
-//
-//        List<ImageResponseDTO> detailImagesInfo = imageUploadService.uploadImages(detailImages,DETAIL_IMAGES_PATH);
-//        List<MusicalDetailImage> musicalDetailImages = setMusicalDetailImagesAssociation(detailImagesInfo, savedMusical);
-//        musicalDetailImageService.save(musicalDetailImages);
-//
-//        List<SeatGrade> seatGrades = setSeatGradesAssociation(createRequestDto.seatGrades(), savedMusical);
-//        seatGradeService.save(seatGrades);
-//
-//        List<MusicalSeat> musicalSeats = setMusicalSeatsAssocaition(createRequestDto.seats(), savedMusical);
-//        musicalSeatService.save(musicalSeats);
-//
-//        List<Casting> castings = setCastingsAssociation(createRequestDto.actorIds(), savedMusical);
-//        castingService.save(castings);
-//
-//        return savedMusical.getId();
-//    }
-//
-//    @Transactional
-//    public void update(
-//            Long musicalId,
-//            MusicalUpdateRequestDTO musicalUpdateRequestDTO,
-//            MultipartFile thumbnailImage,
-//            List<MultipartFile> detailImages
-//    ) {
-//        Musical musical = musicalService.findMusicalById(musicalId);
-//
-//        if (scheduleService.existsByMusical(musical)) {
-//            throw new IllegalArgumentException("이미 뮤지컬의 스케줄이 존재합니다.");
-//        }
-//
-//        if (ticketService.existsByMusical(musical)) {
-//            throw new IllegalArgumentException("이미 예약된 뮤지컬입니다.");
-//        }
-//
-//        ImageResponseDTO thumbnailInfo = imageUploadService.uploadImage(thumbnailImage, THUMBNAIL_PATH);
-//        Stadium stadium = stadiumService.findById(musicalUpdateRequestDTO.stadiumId());
-//        User manager = userService.findByIdForFacade(musicalUpdateRequestDTO.managerId());
-//
-//        seatGradeService.update(musicalUpdateRequestDTO.seatGrades(), musical);
-//        musicalSeatService.update(musicalUpdateRequestDTO.seats(), musicalUpdateRequestDTO.stadiumId(), musical);
-//        castingService.update(musicalUpdateRequestDTO.actors(), musical);
-//
-//        List<ImageResponseDTO> detailImagesInfo = imageUploadService.uploadImages(detailImages, DETAIL_IMAGES_PATH);
-//        musicalDetailImageService.update(detailImagesInfo, musical);
-//        musicalService.updateMusical(musical, musicalUpdateRequestDTO, thumbnailInfo.path(), stadium, manager);
-//    }
+	@Transactional
+	public Long create(
+		MusicalCreateRequestDTO createRequestDto,
+		MultipartFile thumbnail,
+		List<MultipartFile> detailImages
+	) {
 
-    @Transactional(readOnly = true)
-    public PageResponseDTO<Musical, MusicalSummaryResponseDTO> findAllMusicals(Pageable pageable) {
-        Page<Musical> musicalPage = musicalService.findAllMusicals(pageable);
-        return new PageResponseDTO<>(musicalPage, MusicalSummaryResponseDTO::from, PageListIndexSize.MUSICAL_LIST_INDEX_SIZE);
-    }
+		Musical createdMusical = createRequestDto.toEntity();
 
-    @Transactional(readOnly = true)
-    public MusicalDetailResponseDTO findMusicalById(Long musicalId) {
-        Musical musical = musicalService.findMusicalById(musicalId);
-        return MusicalDetailResponseDTO.from(musical);
-    }
+		// thumnail MultipartFile 을 THUMBNAIL_PATH 하위에 저장,
+		// 그 후 원본파일이름과 파일저장경로 반환
+		ImageResponseDTO thumbnailInfo = imageUploadService.uploadImage(thumbnail, THUMBNAIL_PATH);
 
-    @Transactional
-    public void deleteMusical(Long musicalId) {
-        Musical musical = musicalService.findMusicalById(musicalId);
+		// 스타디움 id가 있어야 함.
+		Stadium stadium = stadiumService.findById(createRequestDto.stadiumId());
 
-        boolean hasReservedTicket = musical.getTickets()
-                .stream()
-                .anyMatch(Ticket::isReserved);
+		User manager = userService.findByIdForFacade(createRequestDto.managerId());
 
-        if (hasReservedTicket) {
-            throw new RuntimeException("예매된 티켓이 있어 뮤지컬을 삭제할 수 없습니다");
-        }
+		setMusicalAssociation(createdMusical, thumbnailInfo, stadium, manager);
 
-        musicalService.deleteMusical(musical);
-        castingService.deleteAllByMusical(musical);
-        musicalDetailImageService.deleteAllByMusical(musical);
-        scheduleService.deleteAllByMusical(musical);
-        seatGradeService.deleteAllByMusical(musical);
-        musicalSeatService.deleteAllByMusical(musical);
-    }
+		Musical savedMusical = musicalService.save(createdMusical);
 
-    private void setMusicalAssociation(Musical musical, ImageResponseDTO thumbnailInfo, Stadium stadium,
-                                       User manager) {
-        musical.setThumbnailUrl(thumbnailInfo.path());
-        musical.setStadium(stadium);
-        musical.setUser(manager);
-    }
+		// 파일 저장 후 경로 받아옴.  원본파일이름과 저장경로
+		List<ImageResponseDTO> detailImagesInfo = imageUploadService.uploadImages(detailImages, DETAIL_IMAGES_PATH);
 
-    private List<MusicalDetailImage> setMusicalDetailImagesAssociation(
-            List<ImageResponseDTO> detailImagesInfo,
-            Musical musical
-    ) {
-        return detailImagesInfo.stream()
-                .map(imageResponse ->
-                        MusicalDetailImage.builder()
-                                .musical(musical)
-                                .originalFileName(imageResponse.originalFileName())
-                                .imageUrl(imageResponse.path())
-                                .build()
-                ).toList();
-    }
+		List<MusicalDetailImage> musicalDetailImages = setMusicalDetailImagesAssociation(detailImagesInfo,
+			savedMusical);
+		musicalDetailImageService.save(musicalDetailImages);
 
-    private List<SeatGrade> setSeatGradesAssociation(
-            List<MusicalSeatGradeCreateRequestDTO> createRequestDTOs,
-            Musical musical
-    ) {
-        return createRequestDTOs
-                .stream()
-                .map(seatGradeDTO -> {
-                    SeatGrade seatGrade = seatGradeDTO.toEntity();
-                    seatGrade.setMusical(musical);
-                    return seatGrade;
-                })
-                .toList();
-    }
+		List<SeatGrade> seatGrades = setSeatGradesAssociation(createRequestDto.seatGrades(), savedMusical);
+		seatGradeService.save(seatGrades);
 
-    private List<MusicalSeat> setMusicalSeatsAssocaition(List<MusicalSeatCreateRequestDTO> createRequestDTOs, Musical musical) {
-        return createRequestDTOs
-                .stream()
-                .map(musicalSeatDTO -> {
-                    Seat seat = seatService.findById(musicalSeatDTO.seatId());
-                    SeatGrade seatGrade = seatGradeService.findByNameAndMusical(musicalSeatDTO.seatGradeName(), musical);
-                    return MusicalSeat.builder()
-                            .seat(seat)
-                            .musical(musical)
-                            .seatGrade(seatGrade)
-                            .build();
-                })
-                .toList();
-    }
+		List<MusicalSeat> musicalSeats = setMusicalSeatsAssocaition(createRequestDto.seats(), savedMusical);
+		musicalSeatService.save(musicalSeats);
 
-    private List<Casting> setCastingsAssociation(List<Long> actorIds, Musical musical) {
-        return actorIds
-                .stream()
-                .map(actorId -> {
-                    Actor actor = actorService.findById(actorId);
-                    return Casting.builder()
-                            .actor(actor)
-                            .musical(musical)
-                            .build();
-                })
-                .toList();
-    }
+		List<Casting> castings = setCastingsAssociation(createRequestDto.actorIds(), savedMusical);
+		castingService.save(castings);
+
+		return savedMusical.getId();
+	}
+
+	@Transactional
+	public void update(
+		Long musicalId,
+		MusicalUpdateRequestDTO musicalUpdateRequestDTO,
+		MultipartFile thumbnailImage,
+		List<MultipartFile> detailImages
+	) {
+		Musical musical = musicalService.findMusicalById(musicalId);
+
+		if (scheduleService.existsByMusical(musical)) {
+			throw new IllegalArgumentException("이미 뮤지컬의 스케줄이 존재합니다.");
+		}
+
+		if (ticketService.existsByMusical(musical)) {
+			throw new IllegalArgumentException("이미 예약된 뮤지컬입니다.");
+		}
+
+		ImageResponseDTO thumbnailInfo = imageUploadService.uploadImage(thumbnailImage, THUMBNAIL_PATH);
+		Stadium stadium = stadiumService.findById(musicalUpdateRequestDTO.stadiumId());
+		User manager = userService.findByIdForFacade(musicalUpdateRequestDTO.managerId());
+
+		seatGradeService.update(musicalUpdateRequestDTO.seatGrades(), musical);
+		musicalSeatService.update(musicalUpdateRequestDTO.seats(), musicalUpdateRequestDTO.stadiumId(), musical);
+		castingService.update(musicalUpdateRequestDTO.actors(), musical);
+
+		List<ImageResponseDTO> detailImagesInfo = imageUploadService.uploadImages(detailImages, DETAIL_IMAGES_PATH);
+		musicalDetailImageService.update(detailImagesInfo, musical);
+		musicalService.updateMusical(musical, musicalUpdateRequestDTO, thumbnailInfo.path(), stadium, manager);
+	}
+
+	@Transactional(readOnly = true)
+	public PageResponseDTO<Musical, MusicalSummaryResponseDTO> findAllMusicals(Pageable pageable) {
+		Page<Musical> musicalPage = musicalService.findAllMusicals(pageable);
+		return new PageResponseDTO<>(musicalPage, MusicalSummaryResponseDTO::from,
+			PageListIndexSize.MUSICAL_LIST_INDEX_SIZE);
+	}
+
+	@Transactional(readOnly = true)
+	public MusicalDetailResponseDTO findMusicalById(Long musicalId) {
+		Musical musical = musicalService.findMusicalById(musicalId);
+		return MusicalDetailResponseDTO.from(musical);
+	}
+
+	@Transactional
+	public void deleteMusical(Long musicalId) {
+		Musical musical = musicalService.findMusicalById(musicalId);
+
+		boolean hasReservedTicket = musical.getTickets()
+			.stream()
+			.anyMatch(Ticket::isReserved);
+
+		if (hasReservedTicket) {
+			throw new RuntimeException("예매된 티켓이 있어 뮤지컬을 삭제할 수 없습니다");
+		}
+
+		musicalService.deleteMusical(musical);
+		castingService.deleteAllByMusical(musical);
+		musicalDetailImageService.deleteAllByMusical(musical);
+		scheduleService.deleteAllByMusical(musical);
+		seatGradeService.deleteAllByMusical(musical);
+		musicalSeatService.deleteAllByMusical(musical);
+	}
+
+	private void setMusicalAssociation(Musical musical, ImageResponseDTO thumbnailInfo, Stadium stadium,
+		User manager) {
+		musical.setThumbnailUrl(thumbnailInfo.path());
+		musical.setStadium(stadium);
+		musical.setUser(manager);
+	}
+
+	private List<MusicalDetailImage> setMusicalDetailImagesAssociation(
+		List<ImageResponseDTO> detailImagesInfo,
+		Musical musical
+	) {
+		return detailImagesInfo.stream()
+			.map(imageResponse ->
+				MusicalDetailImage.builder()
+					.musical(musical)
+					.originalFileName(imageResponse.originalFileName())
+					.imageUrl(imageResponse.path())
+					.build()
+			).toList();
+	}
+
+	private List<SeatGrade> setSeatGradesAssociation(
+		List<MusicalSeatGradeCreateRequestDTO> createRequestDTOs,
+		Musical musical
+	) {
+		return createRequestDTOs
+			.stream()
+			.map(seatGradeDTO -> {
+				SeatGrade seatGrade = seatGradeDTO.toEntity();
+				seatGrade.setMusical(musical);
+				return seatGrade;
+			})
+			.toList();
+	}
+
+	private List<MusicalSeat> setMusicalSeatsAssocaition(List<MusicalSeatCreateRequestDTO> createRequestDTOs,
+		Musical musical) {
+		return createRequestDTOs
+			.stream()
+			.map(musicalSeatDTO -> {
+				Seat seat = seatService.findById(musicalSeatDTO.seatId());
+				SeatGrade seatGrade = seatGradeService.findByNameAndMusical(musicalSeatDTO.seatGradeName(), musical);
+				return MusicalSeat.builder()
+					.seat(seat)
+					.musical(musical)
+					.seatGrade(seatGrade)
+					.build();
+			})
+			.toList();
+	}
+
+	private List<Casting> setCastingsAssociation(List<Long> actorIds, Musical musical) {
+
+		return actorIds
+			.stream()
+			.map(actorId -> {
+				Actor actor = actorService.findById(actorId);
+				return Casting.builder()
+					.actor(actor)
+					.musical(musical)
+					.build();
+			})
+			.toList();
+	}
 }

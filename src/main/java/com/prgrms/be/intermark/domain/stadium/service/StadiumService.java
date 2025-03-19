@@ -12,15 +12,19 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class StadiumService {
 
 	private final StadiumRepository stadiumRepository;
 
-	@Transactional(readOnly = true)
 	public Stadium findById(Long stadiumId) {
 		return stadiumRepository.findById(stadiumId)
 			.orElseThrow(() -> {
 				throw new EntityNotFoundException("존재하지 않는 공연장입니다");
 			});
+	}
+
+	public boolean isExistId(Long stadiumId) {
+		return stadiumRepository.existsById(stadiumId);
 	}
 }

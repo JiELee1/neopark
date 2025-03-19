@@ -59,10 +59,10 @@
 //import com.prgrms.be.intermark.domain.musical.dto.MusicalSeatUpdateRequestDTO;
 //import com.prgrms.be.intermark.domain.musical.dto.MusicalSummaryResponseDTO;
 //import com.prgrms.be.intermark.domain.musical.dto.MusicalUpdateRequestDTO;
-//import com.prgrms.be.intermark.domain.musical.model.Genre;
+//import com.prgrms.be.intermark.domain.concert.model.Genre;
 //import com.prgrms.be.intermark.domain.musical.model.Musical;
 //import com.prgrms.be.intermark.domain.musical.model.MusicalDetailImage;
-//import com.prgrms.be.intermark.domain.musical.model.ViewRating;
+//import com.prgrms.be.intermark.domain.concert.model.ViewRating;
 //import com.prgrms.be.intermark.domain.musical.service.MusicalFacadeService;
 //import com.prgrms.be.intermark.domain.stadium.model.Stadium;
 //import com.prgrms.be.intermark.domain.user.SocialType;
