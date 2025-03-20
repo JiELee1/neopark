@@ -1,4 +1,4 @@
-package com.prgrms.be.intermark.domain.newerd.bookingHistory.model;
+package com.prgrms.be.intermark.domain.newerd.booking.model;
 
 import javax.persistence.*;
 import lombok.*;
@@ -13,8 +13,7 @@ public class BookingHistory {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "booking_history_id")
-	private Long bookingHistoryId;
+	private Long id;
 
 	@Column(name = "user_id", nullable = false)
 	private Long userId;
@@ -36,6 +35,6 @@ public class BookingHistory {
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "status", nullable = false)
-	private String status;
+	private BookingStatus status;
 
 }
