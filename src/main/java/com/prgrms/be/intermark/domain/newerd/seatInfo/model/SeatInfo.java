@@ -52,4 +52,12 @@ public class SeatInfo {
 
 	@Column(name = "is_reserved")
 	private boolean reserved = false; // 기본값을 false로 설정
+
+	public void reserve() {
+		this.reserved = true;
+	}
+
+	public void cancel() {
+		this.reserved = false;
+	}
 }

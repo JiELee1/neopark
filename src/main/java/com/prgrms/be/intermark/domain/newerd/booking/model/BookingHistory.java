@@ -37,4 +37,8 @@ public class BookingHistory {
 	@Column(name = "status", nullable = false)
 	private BookingStatus status;
 
+	public void cancel() {
+		this.status = BookingStatus.CANCELLED;
+	}
+
 }
