@@ -22,14 +22,29 @@ public class TicketController {
 
     private final TicketService ticketService;
 
-    @PostMapping
-    public ResponseEntity<Void> createTicket(@RequestBody @Valid TicketCreateRequestDTO ticketCreateRequestDTO) {
+    @PostMapping("/create")
+    public ResponseEntity<Void> createTicket(
+            @RequestHeader("Authorization") String token,
+            @RequestBody @Valid TicketCreateRequestDTO ticketCreateRequestDTO) {
 
-        Long ticketId = ticketService.createTicket(ticketCreateRequestDTO);
+        Long ticketId = ticketService.createTicket(ticketCreateRequestDTO,token);
 
         return ResponseEntity.created(
-            URI.create("/api/v1/tickets/" + ticketId)
+                URI.create("/api/v1/tickets/" + ticketId)
         ).build();
+    }
+
+
+    @PostMapping
+    public ResponseEntity<String> createTicket1(
+            @RequestHeader("Authorization") String token,
+            @RequestBody @Valid TicketCreateRequestDTO ticketCreateRequestDTO
+    ){
+        Long ticketId = ticketService.createTicket(ticketCreateRequestDTO, token);
+        String message = String.format("%s 님이 %d번째 좌석을 예매하였습니다.", ticketCreateRequestDTO.getUserId(), ticketCreateRequestDTO.getScheduleSeatId());
+        String ticketInfo = String.format("\n고객님의 티켓번호는 %d입니다.", ticketId);
+
+        return ResponseEntity.ok(message+ticketInfo);
     }
 
     @GetMapping

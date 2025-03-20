@@ -9,11 +9,12 @@ import com.prgrms.be.intermark.domain.ticket.model.TicketStatus;
 import com.prgrms.be.intermark.domain.user.User;
 
 import lombok.Builder;
+import lombok.Getter;
 
 @Builder
 public record TicketCreateRequestDTO(
-        @NotNull @Positive Long userId,
-        @NotNull @Positive Long scheduleSeatId
+        @Getter @NotNull @Positive Long userId,
+        @Getter @NotNull @Positive Long scheduleSeatId
 ) {
     public Ticket toEntity(User user, ScheduleSeat scheduleSeat) {
         return Ticket.builder()

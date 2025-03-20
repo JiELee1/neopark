@@ -15,7 +15,7 @@ import com.prgrms.be.intermark.domain.schedule.model.Schedule;
 import com.prgrms.be.intermark.domain.stadium.model.Stadium;
 
 public interface ConcertScheduleRepository extends JpaRepository<ConcertSchedule, Long> {
-	@Query("SELECT COUNT(s) FROM Schedule s " +
+	/*@Query("SELECT COUNT(s) FROM Schedule s " +
 		"WHERE s.isDeleted = false AND s.startTime <= :endTime AND s.endTime >= :startTime " +
 		"AND s.musical.stadium = :stadium")
 	int getSchedulesNumByStartTime(
@@ -38,5 +38,5 @@ public interface ConcertScheduleRepository extends JpaRepository<ConcertSchedule
 
 	Page<Schedule> findAllByMusical(Musical musical, Pageable pageable);
 
-	List<Schedule> findByMusicalAndIsDeletedIsFalse(Musical musical);
+	List<Schedule> findByMusicalAndIsDeletedIsFalse(Musical musical);*/
 }
