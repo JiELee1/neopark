@@ -1,16 +1,16 @@
 package com.prgrms.be.intermark.domain.newerd.actor.dto;
 
-import com.prgrms.be.intermark.domain.newerd.actor.model.Actor;
+import com.prgrms.be.intermark.domain.newerd.actor.model.ActorTobe;
 
 import lombok.Builder;
 
 @Builder
 public record ActorResponseDTO(String name, String profileImage) {
 
-	public static ActorResponseDTO from(Actor actor) {
+	public static ActorResponseDTO from(ActorTobe actorTobe) {
 		return ActorResponseDTO.builder()
-			.name(actor.getName())
-			.profileImage(actor.getProfileImageUrl())
+			.name(actorTobe.getName())
+			.profileImage(actorTobe.getProfileImageUrl())
 			.build();
 	}
 

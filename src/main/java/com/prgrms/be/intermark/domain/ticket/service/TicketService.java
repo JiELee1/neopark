@@ -5,6 +5,9 @@ import com.prgrms.be.intermark.common.dto.page.PageResponseDTO;
 import com.prgrms.be.intermark.common.service.page.PageService;
 import com.prgrms.be.intermark.domain.musical.model.Musical;
 import com.prgrms.be.intermark.domain.musical.repository.MusicalRepository;
+import com.prgrms.be.intermark.domain.newerd.queue.service.WaitingQueueService;
+import com.prgrms.be.intermark.domain.newerd.queue.uscase.CreateWaitingQueueUseCase;
+import com.prgrms.be.intermark.domain.newerd.queue.uscase.ExpireActiveQueueUseCase;
 import com.prgrms.be.intermark.domain.schedule.model.Schedule;
 import com.prgrms.be.intermark.domain.schedule_seat.model.ScheduleSeat;
 import com.prgrms.be.intermark.domain.schedule_seat.repository.ScheduleSeatRepository;
@@ -37,9 +40,15 @@ public class TicketService {
     private final MusicalRepository musicalRepository;
     private final ScheduleSeatRepository scheduleSeatRepository;
     private final PageService pageService;
+    private final CreateWaitingQueueUseCase createWaitingQueueUseCase;
+    private final ExpireActiveQueueUseCase expireActiveQueueUseCase;
 
     @Transactional
-    public Long createTicket(TicketCreateRequestDTO ticketCreateRequestDTO) {
+    public Long createTicket(TicketCreateRequestDTO ticketCreateRequestDTO, String waitingQueueToken) {
+
+        // TODO: 1. 대기열 추가함. (원래 해당 로직은 없었음.)
+        createWaitingQueueUseCase.createWaitingQueue(ticketCreateRequestDTO.getUserId(), waitingQueueToken);
+
         User user = userRepository.findByIdAndIsDeletedFalse(ticketCreateRequestDTO.userId())
                 .orElseThrow(() -> new EntityNotFoundException("존재하지 않은 유저입니다."));
 
@@ -57,6 +66,9 @@ public class TicketService {
         Ticket ticket = ticketCreateRequestDTO.toEntity(user, scheduleSeat);
         ticketRepository.save(ticket);
         scheduleSeat.reserve();
+
+        // TODO: 2. 대기열 만료함. (원래 해당 로직은 없었음.)
+        expireActiveQueueUseCase.expireActiveQueue(waitingQueueToken);
 
         return ticket.getId();
     }

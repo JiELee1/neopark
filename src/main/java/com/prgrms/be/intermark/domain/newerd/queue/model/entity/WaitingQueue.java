@@ -1,0 +1,67 @@
+package com.prgrms.be.intermark.domain.newerd.queue.model.entity;
+
+import com.prgrms.be.intermark.domain.newerd.queue.exception.CoreException;
+import com.prgrms.be.intermark.domain.newerd.queue.exception.WaitingQueueErrorType;
+import com.prgrms.be.intermark.domain.newerd.queue.model.enums.QueueStatus;
+import lombok.*;
+
+import java.time.LocalDateTime;
+
+@ToString
+@Getter
+@Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+public class WaitingQueue {
+
+    private Long id;
+    private Long userId;
+    private String token;
+    private long waitingOrder;
+    private QueueStatus status;
+    private LocalDateTime activatedAt;
+    private LocalDateTime expiredAt;
+    private LocalDateTime lastActionedAt;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+
+    /**
+     * 대기열 새로 생성 시 사용
+     * @param userId 사용자 ID
+     * @param token 대기열 토큰
+     */
+    public WaitingQueue (final Long userId, final String token) {
+        this.userId = userId;
+        this.token = token;
+        this.status = QueueStatus.WAITING;
+    }
+
+    public boolean isWaiting() {
+        return this.status == QueueStatus.WAITING;
+    }
+
+    public boolean isActivated() {
+        return this.status == QueueStatus.ACTIVATED;
+    }
+
+    public boolean isExpired() {
+        return this.status == QueueStatus.EXPIRED;
+    }
+
+    public void activate(final LocalDateTime activatedAt) {
+        if (this.isActivated()) {
+            throw new CoreException(WaitingQueueErrorType.WAITING_QUEUE_ALREADY_ACTIVATED, "이미 활성화된 대기열입니다.");
+        }
+
+        if (this.isExpired()) {
+            throw new CoreException(WaitingQueueErrorType.WAITING_QUEUE_EXPIRED, "만료된 대기열은 활성화할 수 없습니다.");
+        }
+
+        this.status = QueueStatus.ACTIVATED;
+        this.activatedAt = activatedAt;
+    }
+
+    public void expire(final LocalDateTime expiredAt) {
+        this.status = QueueStatus.EXPIRED;
+        this.expiredAt = expiredAt;
+    }
+}

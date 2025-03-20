@@ -19,7 +19,6 @@ import java.util.Optional;
 import static com.prgrms.be.intermark.auth.constant.JwtConstants.REFRESH_TOKEN_COOKIE_MAX_AGE;
 import static com.prgrms.be.intermark.auth.constant.JwtConstants.REFRESH_TOKEN_COOKIE_NAME;
 import static com.prgrms.be.intermark.util.HeaderUtil.getAccessToken;
-
 @Controller
 @RequiredArgsConstructor
 public class OAuthController {
@@ -32,7 +31,7 @@ public class OAuthController {
         String accessToken = getAccessToken(request);
 
         if (!tokenProvider.validate(accessToken)) {
-            // 분기처리
+            // 예외를 던지면 GlobalExceptionHandler에서 처리됨
             throw new IllegalArgumentException("access token이 validate 하지 않습니다.");
         }
 
