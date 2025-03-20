@@ -51,7 +51,7 @@ public class SeatInfo {
 	private int columnNum;
 
 	@Column(name = "is_reserved")
-	private boolean isReserved = false; // 기본값을 false로 설정
+	private boolean reserved = false; // 기본값을 false로 설정
 
 
 }
