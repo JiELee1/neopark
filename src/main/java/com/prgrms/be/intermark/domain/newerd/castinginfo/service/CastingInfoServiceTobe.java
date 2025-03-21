@@ -8,19 +8,20 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.prgrms.be.intermark.domain.newerd.actor.repository.ActorRepositoryTobe;
 import com.prgrms.be.intermark.domain.newerd.castinginfo.model.CastingInfo;
-import com.prgrms.be.intermark.domain.newerd.castinginfo.repository.CastingInfoRepository;
+import com.prgrms.be.intermark.domain.newerd.castinginfo.repository.CastingInfoRepositoryTobe;
 
 @Service
 @Transactional(readOnly = true)
-public class CastingInfoService {
+public class CastingInfoServiceTobe {
 
-	private final CastingInfoRepository castingInfoRepository;
-	private final ActorRepositoryTobe actorRepositoryTobe;
+	private final CastingInfoRepositoryTobe castingInfoRepository;
+	private final ActorRepositoryTobe actorRepository;
 
 	@Autowired
-	public CastingInfoService(CastingInfoRepository castingInfoRepository, ActorRepositoryTobe actorRepositoryTobe) {
+	public CastingInfoServiceTobe(CastingInfoRepositoryTobe castingInfoRepository,
+		ActorRepositoryTobe actorRepository) {
 		this.castingInfoRepository = castingInfoRepository;
-		this.actorRepositoryTobe = actorRepositoryTobe;
+		this.actorRepository = actorRepository;
 	}
 
 	@Transactional

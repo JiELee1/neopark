@@ -7,10 +7,10 @@ import lombok.Builder;
 @Builder
 public record ActorResponseDTO(String name, String profileImage) {
 
-	public static ActorResponseDTO from(ActorTobe actorTobe) {
+	public static ActorResponseDTO from(ActorTobe actor) {
 		return ActorResponseDTO.builder()
-			.name(actorTobe.getName())
-			.profileImage(actorTobe.getProfileImageUrl())
+			.name(actor.getName())
+			.profileImage(actor.getProfileImageUrl())
 			.build();
 	}
 

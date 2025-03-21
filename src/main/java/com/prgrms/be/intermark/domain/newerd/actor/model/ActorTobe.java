@@ -22,7 +22,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "actor")
+@Table(name = "actor_tobe")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class ActorTobe extends BaseEntity {
@@ -30,6 +30,8 @@ public class ActorTobe extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
+	private Long actorUid;
 
 	@NotBlank
 	@Column(name = "name", nullable = false, length = 20)

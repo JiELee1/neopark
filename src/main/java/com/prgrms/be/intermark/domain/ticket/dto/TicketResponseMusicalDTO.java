@@ -2,9 +2,9 @@ package com.prgrms.be.intermark.domain.ticket.dto;
 
 import javax.validation.constraints.NotNull;
 
-import com.prgrms.be.intermark.domain.musical.model.ViewRating;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.prgrms.be.intermark.domain.musical.model.ViewRating;
 
 import lombok.Builder;
 
