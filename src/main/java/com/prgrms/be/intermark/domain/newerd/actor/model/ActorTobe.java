@@ -22,14 +22,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "actor")
+@Table(name = "actor_tobe")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Actor extends BaseEntity {
+public class ActorTobe extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
+	private Long actorUid;
 
 	@NotBlank
 	@Column(name = "name", nullable = false, length = 20)
@@ -49,7 +51,7 @@ public class Actor extends BaseEntity {
 	private String profileImageUrl;
 
 	@Builder
-	public Actor(String name, LocalDate birth, Gender gender, String profileImageUrl) {
+	public ActorTobe(String name, LocalDate birth, Gender gender, String profileImageUrl) {
 		this.name = name;
 		this.birth = birth;
 		this.gender = gender;
