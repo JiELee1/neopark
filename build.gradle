@@ -64,6 +64,8 @@ dependencies {
     // redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation group: 'org.redisson', name: 'redisson', version: '3.2.0'
+    implementation group: 'io.github.cdimascio', name: 'java-dotenv', version: '5.2.2'
+
 }
 
 test {

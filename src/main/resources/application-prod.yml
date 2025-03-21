@@ -1,11 +1,16 @@
 jwt:
   secret:
-    access: "w7uGmFxgOlFS9T+gFynHk7jB6mI/eA9WgjG5o9gB8uI="
-    refresh: "w7uGmFxgOlFS9T+gFynHk7jB6mI/eA9WgjG5o9gB8uI="
+    access: "${JWT_SECRET_ACCESS}"
+    refresh: "${JWT_SECRET_REFRESH}"
 
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3308/mydatabase
-    username: dbuser
-    password: dbpassword
+    url: "${DB_URL:jdbc:mysql://localhost:3308/mydatabase}"
+    username: "${DB_USERNAME:dbuser}"
+    password: "${DB_PASSWORD:dbpassword}"
+
+  data:
+    redis:
+      host: "${REDIS_HOST:127.0.0.1}"
+      port: "${REDIS_PORT:6379}"

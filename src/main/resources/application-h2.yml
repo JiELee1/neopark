@@ -1,43 +1,69 @@
 jwt:
   secret:
-    access: "w7uGmFxgOlFS9T+gFyiseruy3b974ryiseruvthnHk7jB6mIdgsdrgdfthcfgh/eA9WgjG5o9gB8uI="
-    refresh: "w7uGmFxgOlFS9T+gFyv9o3i8nyies8ntyv9374eytviwudynHk7jB6mI/dcghdftghfgdfgbeA9WgjG5o9gB8uI="
+    access: "${JWT_SECRET_ACCESS}"
+    refresh: "${JWT_SECRET_REFRESH}"
+server:
+  tomcat:
+    accept-count: 100
+    threads:
+      min-spare: 500
+      max: 1000
+    max-connections: 50000
 
 spring:
-#  h2:
-#    console:
-#      enabled: true
-#      path: /h2-console
-#      settings:
-#        web-allow-others: true
-#
-#  datasource:
-#    url: jdbc:h2:mem:testdb
-#    driver-class-name: org.h2.Driver
-#    username: sa
-#    password:
+  data:
+    redis:
+      host: "${REDIS_HOST:127.0.0.1}"
+      port: "${REDIS_PORT:6379}"
+
+  #  h2:
+  #    console:
+  #      enabled: true
+  #      path: /h2-console
+  #      settings:
+  #        web-allow-others: true
+  #
+  #  datasource:
+  #    url: jdbc:h2:mem:testdb
+  #    driver-class-name: org.h2.Driver
+  #    username: sa
+  #    password:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3386/neopark    # 테스트용 DB URL (실제 테스트 환경에 맞게 수정)
-    username: neo                                 # 테스트용 DB 사용자
-    password: neo                             # 테스트용 DB 비밀번호
-
+    url: "${DB_URL:jdbc:mysql://localhost:3308/mydatabase}"  # 테스트용 DB URL (실제 테스트 환경에 맞게 수정)
+    username: "${DB_USERNAME:dbuser}"       # DB 사용자
+    password: "${DB_PASSWORD:dbpassword}"   # DB 비밀번호
+    hikari:
+      maximum-pool-size: 20              # 최대 20개의 커넥션을 사용 (DB max_connections 고려)
+      minimum-idle: 10                    # 최소 10개의 유휴 커넥션을 유지하여 필요시 빠른 대응
+      connection-timeout: 60000          # 60초 내에 커넥션을 획득하지 못하면 예외 발생
+      idle-timeout: 300000               # 유휴 커넥션은 최대 5분까지 유지
+      max-lifetime: 1800000              # 각 커넥션의 최대 수명을 30분으로 제한
+      initialization-fail-timeout: 30000 # 초기 커넥션 생성에 실패하면 30초 동안 재시도
+      leak-detection-threshold: 60000    # 60초 이상 사용된 커넥션에 대해 누수 경고 로깅 (문제 진단에 도움)
+      # connection-test-query: SELECT 1  # JDBC4 이상에서는 불필요하나, 필요시 활성 커넥션 검증을 위해 사용
   jpa:
     hibernate:
       ddl-auto: create-drop
+      show-sql: true
+    defer-datasource-initialization: true
     properties:
       hibernate:
+        show-sql: true
+        format_sql: true
         dialect: org.hibernate.dialect.MySQL8Dialect
     generate-ddl: true
-
+  sql:
+    init:
+      mode: always
   security:
     oauth2:
       client:
         registration:
           google:
-            client-id:
-            client-secret:
+            client-id: "${GOOGLE_CLIENT_ID}"
+            client-secret: "${GOOGLE_CLIENT_SECRET}"
             scope:
-    profiles:
-      include: oauth
+              - "email"
+              - "profile"

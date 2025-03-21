@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>대기열 실시간 정보</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 2px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<h3>모든 대기열 정보</h3>
+
+<!-- 대기열 상태 표시 테이블 -->
+<table id="waitingQueueTable">
+    <thead>
+    <tr>
+        <th>사용자 ID</th>
+        <th>토큰</th>
+        <th>상태</th>
+        <th>대기 순서</th>
+        <th>활성화 시간</th>
+        <th>만료 시간</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- 대기열 데이터가 여기에 동적으로 추가됩니다 -->
+    </tbody>
+</table>
+
+<h4>대기열 상태 변화 그래프</h4>
+<canvas id="waitingQueueChart" width="400" height="200"></canvas>
+
+<script>
+    const authToken = "Bearer YOUR_JWT_TOKEN_HERE";
+
+    // 대기열 정보 API 호출
+    async function fetchAllWaitingQueues() {
+        const response = await fetch("/waiting-queues/all", {
+            method: "GET",
+            headers: {
+                "Authorization": authToken,
+            }
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            updateTable(data);
+            updateChart(data);
+        } else {
+            console.error("대기열 정보를 가져오는 데 실패했습니다.");
+        }
+    }
+
+    // 테이블 업데이트
+    function updateTable(data) {
+        const tableBody = document.getElementById("waitingQueueTable").getElementsByTagName('tbody')[0];
+        tableBody.innerHTML = ''; // 기존 내용 삭제
+
+        data.forEach(item => {
+            const row = tableBody.insertRow();
+            row.insertCell(0).textContent = item.userId;
+            row.insertCell(1).textContent = item.token;
+            row.insertCell(2).textContent = item.status;
+            row.insertCell(3).textContent = item.waitingOrder;
+            row.insertCell(4).textContent = item.activatedAt || "없음";
+            row.insertCell(5).textContent = item.expiredAt || "없음";
+        });
+    }
+
+    // 그래프 업데이트
+    function updateChart(data) {
+        const chartData = {
+            labels: data.map(item => item.token), // 각 토큰
+            datasets: [{
+                label: '대기열 상태',
+                data: data.map(item => item.status === "WAITING" ? 1 : (item.status === "ACTIVATED" ? 2 : 3)),
+                backgroundColor: ['#FF0000', '#00FF00', '#FFFF00'], // 상태에 따른 색상
+                borderColor: ['#FF0000', '#00FF00', '#FFFF00'],
+                borderWidth: 1
+            }]
+        };
+
+        const ctx = document.getElementById('waitingQueueChart').getContext('2d');
+        if (window.waitingQueueChart) {
+            window.waitingQueueChart.destroy();
+        }
+
+        window.waitingQueueChart = new Chart(ctx, {
+            type: 'bar',
+            data: chartData,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+
+    // 페이지 로드 시 대기열 데이터 불러오기
+    window.onload = function() {
+        fetchAllWaitingQueues();
+    };
+
+    // 주기적으로 대기열 데이터를 업데이트 (5초마다)
+    setInterval(fetchAllWaitingQueues, 5000);
+</script>
+</body>
+</html>
