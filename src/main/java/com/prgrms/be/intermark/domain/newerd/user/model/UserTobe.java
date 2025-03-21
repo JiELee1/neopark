@@ -16,7 +16,7 @@ import java.time.LocalDate;
 @Table(name = "user")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class User {
+public class UserTobe {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +34,7 @@ public class User {
 	@NotNull
 	@Enumerated(value = EnumType.STRING)
 	@Column(name = "social_type", nullable = false)
-	private SocialType socialType;
+	private SocialTypeTobe socialTypeTobe;
 
 	@NotBlank
 	@Column(name = "social_id", nullable = false, length = 64)
@@ -43,7 +43,7 @@ public class User {
 	@NotNull
 	@Enumerated(value = EnumType.STRING)
 	@Column(name = "role", nullable = false, length = 15)
-	private UserRole role;
+	private UserRoleTobe role;
 
 	@Nullable
 	@Column(name = "refresh_token", unique = true)

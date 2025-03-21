@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
-class UserServiceTest {
+class UserTobeServiceTest {
 
     private final UserRepository userRepository = mock(UserRepository.class);
     private final TokenProvider tokenProvider = mock(TokenProvider.class);

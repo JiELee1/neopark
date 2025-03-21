@@ -66,7 +66,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(UserController.class)
 @WithMockUser
 @AutoConfigureRestDocs
-class UserControllerTest {
+class UserTobeControllerTest {
 
     @Autowired
     MockMvc mockMvc;
@@ -150,7 +150,7 @@ class UserControllerTest {
 
     @Nested
     @DisplayName("findUser")
-    class FindUser {
+    class FindUserTobe {
 
         Long userId = 1L;
         User user = User.builder()
@@ -219,7 +219,7 @@ class UserControllerTest {
     }
 
     @Nested
-    class DeleteUser {
+    class DeleteUserTobe {
         static Stream<Arguments> userIdRoleProvider() {
             return Stream.of(
                     arguments(1L, UserRole.ROLE_USER),
@@ -374,7 +374,7 @@ class UserControllerTest {
 
     }
     @Nested
-    class UpdateUserAuthority{
+    class UpdateUserTobeAuthority {
         static Stream<Arguments> allUserAndWrongRequestBodyProvider(){
             return Stream.of(
                     arguments(1L,UserRole.ROLE_USER,2L,"{\"택도없는거시기\":123}"),

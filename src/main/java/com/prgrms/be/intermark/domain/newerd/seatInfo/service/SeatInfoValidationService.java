@@ -4,8 +4,8 @@ import javax.persistence.EntityNotFoundException;
 
 import org.springframework.stereotype.Service;
 
-import com.prgrms.be.intermark.domain.newerd.seatInfo.model.SeatInfo;
-import com.prgrms.be.intermark.domain.newerd.seatInfo.repository.SeatInfoRepository;
+import com.prgrms.be.intermark.domain.newerd.seatInfo.model.SeatInfoTobe;
+import com.prgrms.be.intermark.domain.newerd.seatInfo.repository.SeatInfoRepositoryTobe;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,15 +15,15 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class SeatInfoValidationService {
 
-	private final SeatInfoRepository seatInfoRepository;
+	private final SeatInfoRepositoryTobe seatInfoRepositoryTobe;
 
-	public SeatInfo findAvailableSeatInfo(Long seatInfoId) {
-		return seatInfoRepository.findByIdAndReserved(seatInfoId, false)
+	public SeatInfoTobe findAvailableSeatInfo(Long seatInfoId) {
+		return seatInfoRepositoryTobe.findByIdAndReserved(seatInfoId, false)
 			.orElseThrow(() -> new EntityNotFoundException("존재하지 않거나 이미 예약된 좌석입니다"));
 	}
 
-	public SeatInfo findReservedSeatInfo(Long seatInfoId) {
-		return seatInfoRepository.findByIdAndReserved(seatInfoId, true)
+	public SeatInfoTobe findReservedSeatInfo(Long seatInfoId) {
+		return seatInfoRepositoryTobe.findByIdAndReserved(seatInfoId, true)
 			.orElseThrow(() -> new EntityNotFoundException("존재하지 않거나 이미 취소된 좌석입니다"));
 	}
 }

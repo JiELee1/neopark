@@ -7,7 +7,7 @@ import com.prgrms.be.intermark.domain.newerd.booking.dto.ReserveConcertRequest;
 import com.prgrms.be.intermark.domain.newerd.booking.model.BookingHistory;
 import com.prgrms.be.intermark.domain.newerd.booking.repository.BookingHistoryRepository;
 import com.prgrms.be.intermark.domain.newerd.concertschedule.service.ConcertScheduleValidationService;
-import com.prgrms.be.intermark.domain.newerd.seatInfo.model.SeatInfo;
+import com.prgrms.be.intermark.domain.newerd.seatInfo.model.SeatInfoTobe;
 import com.prgrms.be.intermark.domain.newerd.seatInfo.service.SeatInfoValidationService;
 import com.prgrms.be.intermark.domain.newerd.user.service.UserValidationService;
 
@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class BookingService {
 
 	private final UserValidationService userValidationService;
@@ -28,19 +29,19 @@ public class BookingService {
 	@Transactional
 	public Long reserveConcert(ReserveConcertRequest reserveConcertRequest) {
 		userValidationService.findActiveUser(reserveConcertRequest.userId());
-		SeatInfo seatInfo = seatInfoValidationService.findAvailableSeatInfo(reserveConcertRequest.seatId());
-		concertScheduleValidationService.findAvailableConcertSchedule(seatInfo.getConcertScheduleId());
+		SeatInfoTobe seatInfoTobe = seatInfoValidationService.findAvailableSeatInfo(reserveConcertRequest.seatId());
+		concertScheduleValidationService.findAvailableConcertSchedule(seatInfoTobe.getConcertScheduleId());
 
-		seatInfo.reserve();
-		return bookingHistoryRepository.save(reserveConcertRequest.toBookingHistory(seatInfo)).getId();
+		seatInfoTobe.reserve();
+		return bookingHistoryRepository.save(reserveConcertRequest.toBookingHistory(seatInfoTobe)).getId();
 	}
 
 	@Transactional
 	public void cancelConcert(Long userId, Long historyId) {
 		BookingHistory bookingHistory = bookingValidationService.findBookingHistory(historyId, userId);
-		SeatInfo seatInfo = seatInfoValidationService.findReservedSeatInfo(bookingHistory.getSeatId());
+		SeatInfoTobe seatInfoTobe = seatInfoValidationService.findReservedSeatInfo(bookingHistory.getSeatId());
 
-		seatInfo.cancel();
+		seatInfoTobe.cancel();
 		bookingHistory.cancel();
 	}
 

@@ -13,7 +13,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 
 @Entity
 @Table(name = "seat_info")
@@ -21,7 +20,7 @@ import lombok.NonNull;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-public class SeatInfo {
+public class SeatInfoTobe {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

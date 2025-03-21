@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-class UserRepositoryTest {
+class UserTobeRepositoryTest {
 
     @Autowired
     private UserRepository userRepository;
@@ -120,7 +120,7 @@ class UserRepositoryTest {
 
     @Nested
     @DisplayName("findBySocialTypeAndSocialId")
-    class FindBySocialTypeAndSocialId {
+    class FindBySocialTypeAndSocialIdTobe {
 
         User user = User.builder()
                 .social(SocialType.GOOGLE)
