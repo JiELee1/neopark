@@ -3,6 +3,7 @@ jwt:
     access: "${JWT_SECRET_ACCESS}"
     refresh: "${JWT_SECRET_REFRESH}"
 
+
 local:
   images:
     path: "${LOCAL_STORAGE_PATH:/Users/gimjingyu/Desktop/java/project/neopark/neopark/img}"
