@@ -4,11 +4,15 @@ plugins {
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
     id "org.asciidoctor.jvm.convert" version "3.3.2"
     id 'jacoco'
+    id 'checkstyle'
 }
 
 group = 'com.prgrms.be'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
+
+compileJava.options.encoding = 'UTF-8'
+compileTestJava.options.encoding = 'UTF-8'
 
 configurations {
     compileOnly {
@@ -125,4 +129,11 @@ jacocoTestCoverageVerification {
             ]
         }
     }
+}
+
+checkstyle {
+    maxWarnings = 0 // 규칙이 어긋나는 코드가 하나라도 있을 경우 빌드 fail을 내고 싶다면 이 선언을 추가한다.
+    configFile = file("${rootDir}/naver-checkstyle-rules.xml")
+    configProperties = ["suppressionFile": "${rootDir}/naver-checkstyle-suppressions.xml"]
+    toolVersion = "8.24"  // checkstyle 버전 8.24 이상 선언
 }
