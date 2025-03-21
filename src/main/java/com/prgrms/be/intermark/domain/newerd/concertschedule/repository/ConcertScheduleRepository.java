@@ -36,7 +36,7 @@ public interface ConcertScheduleRepository extends JpaRepository<ConcertSchedule
 	//
 	// List<Schedule> findByMusicalAndIsDeletedIsFalse(Musical musical);
 
-	List<Schedule> findByMusicalAndIsDeletedIsFalse(Musical musical);
+	//List<Schedule> findByMusicalAndIsDeletedIsFalse(Musical musical);
 
 	Optional<ConcertSchedule> findByIdAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(Long id, LocalDateTime curTime1, LocalDateTime curTime2);
 }
