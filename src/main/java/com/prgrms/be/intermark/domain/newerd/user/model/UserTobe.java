@@ -34,7 +34,7 @@ public class UserTobe {
 	@NotNull
 	@Enumerated(value = EnumType.STRING)
 	@Column(name = "social_type", nullable = false)
-	private SocialType socialType;
+	private SocialTypeTobe socialTypeTobe;
 
 	@NotBlank
 	@Column(name = "social_id", nullable = false, length = 64)
@@ -43,14 +43,14 @@ public class UserTobe {
 	@NotNull
 	@Enumerated(value = EnumType.STRING)
 	@Column(name = "role", nullable = false, length = 15)
-	private UserRole role;
+	private UserRoleTobe role;
 
 	@Nullable
 	@Column(name = "refresh_token", unique = true)
 	private String refreshToken;
 
 	@Column(name = "is_deleted", nullable = false)
-	private boolean isDeleted;
+	private boolean deleted;
 
 	@Nullable
 	@Column(name = "birth")

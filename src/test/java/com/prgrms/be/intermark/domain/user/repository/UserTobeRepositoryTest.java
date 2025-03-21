@@ -120,7 +120,7 @@ class UserTobeRepositoryTest {
 
     @Nested
     @DisplayName("findBySocialTypeAndSocialId")
-    class FindBySocialTypeAndSocialId {
+    class FindBySocialTypeAndSocialIdTobe {
 
         User user = User.builder()
                 .social(SocialType.GOOGLE)

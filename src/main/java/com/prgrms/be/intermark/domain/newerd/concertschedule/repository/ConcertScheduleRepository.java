@@ -1,5 +1,11 @@
 package com.prgrms.be.intermark.domain.newerd.concertschedule.repository;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.prgrms.be.intermark.domain.newerd.concertschedule.model.ConcertSchedule;
@@ -29,4 +35,8 @@ public interface ConcertScheduleRepository extends JpaRepository<ConcertSchedule
 	// Page<Schedule> findAllByMusical(Musical musical, Pageable pageable);
 	//
 	// List<Schedule> findByMusicalAndIsDeletedIsFalse(Musical musical);
+
+	List<Schedule> findByMusicalAndIsDeletedIsFalse(Musical musical);
+
+	Optional<ConcertSchedule> findByIdAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(Long id, LocalDateTime curTime1, LocalDateTime curTime2);
 }

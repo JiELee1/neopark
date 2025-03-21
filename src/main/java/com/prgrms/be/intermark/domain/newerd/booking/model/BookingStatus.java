@@ -1,4 +1,4 @@
-package com.prgrms.be.intermark.domain.newerd.bookingHistory.model;
+package com.prgrms.be.intermark.domain.newerd.booking.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
