@@ -1,8 +1,7 @@
 package com.prgrms.be.intermark.domain.newerd.queue.config.redis;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import lombok.extern.slf4j.Slf4j;
+import java.io.IOException;
+
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
@@ -18,63 +17,65 @@ import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSeriali
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-import java.io.IOException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Configuration
 public class RedisConfig {
-    private static final String REDISSON_HOST_PREFIX = "redis://";
+	private static final String REDISSON_HOST_PREFIX = "redis://";
 
-    @Value("${spring.data.redis.host}")
-    private String redisHost;
+	@Value("${spring.data.redis.host}")
+	private String redisHost;
 
-    @Value("${spring.data.redis.port}")
-    private int redisPort;
+	@Value("${spring.data.redis.port}")
+	private int redisPort;
 
-    // Redis Connection Factory 설정
-    @Bean
-    public RedisConnectionFactory redisConnectionFactory() {
-        return new LettuceConnectionFactory(new RedisStandaloneConfiguration(redisHost, redisPort));
-    }
+	// Redis Connection Factory 설정
+	@Bean
+	public RedisConnectionFactory redisConnectionFactory() {
+		return new LettuceConnectionFactory(new RedisStandaloneConfiguration(redisHost, redisPort));
+	}
 
-    // RedisTemplate 설정
-    @Bean
-    public RedisTemplate<String, Object> redisTemplate() {
-        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setKeySerializer(new StringRedisSerializer());
-        redisTemplate.setValueSerializer(new StringRedisSerializer());
-        redisTemplate.setDefaultSerializer(new StringRedisSerializer());
-        redisTemplate.setConnectionFactory(redisConnectionFactory());
+	// RedisTemplate 설정
+	@Bean
+	public RedisTemplate<String, Object> redisTemplate() {
+		RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+		redisTemplate.setKeySerializer(new StringRedisSerializer());
+		redisTemplate.setValueSerializer(new StringRedisSerializer());
+		redisTemplate.setDefaultSerializer(new StringRedisSerializer());
+		redisTemplate.setConnectionFactory(redisConnectionFactory());
 
-        return redisTemplate;
-    }
+		return redisTemplate;
+	}
 
-    // 문자열에 특화한 메소드 제공
-    @Bean
-    StringRedisTemplate stringRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
-        StringRedisTemplate template = new StringRedisTemplate();
-        template.setConnectionFactory(redisConnectionFactory);
-        return template;
-    }
+	// 문자열에 특화한 메소드 제공
+	@Bean
+	StringRedisTemplate stringRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
+		StringRedisTemplate template = new StringRedisTemplate();
+		template.setConnectionFactory(redisConnectionFactory);
+		return template;
+	}
 
-    @Bean
-    public RedisSerializer<Object> redisSerializer() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule()); // Java 8 날짜/시간 모듈 추가
-        objectMapper.findAndRegisterModules(); // 추가 모듈 자동 등록
+	@Bean
+	public RedisSerializer<Object> redisSerializer() {
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.registerModule(new JavaTimeModule()); // Java 8 날짜/시간 모듈 추가
+		objectMapper.findAndRegisterModules(); // 추가 모듈 자동 등록
 
-        return new GenericJackson2JsonRedisSerializer(objectMapper);
-    }
+		return new GenericJackson2JsonRedisSerializer(objectMapper);
+	}
 
-
-    // Redisson Client 설정
-    @Bean
-    public RedissonClient redissonClient() throws IOException {
-        String host = redisHost + ":" + redisPort;
-        log.debug("Redisson Client Host (without trailing slash): {}", host);
-        Config config = new Config();
-        config.useSingleServer().setAddress(host);
-        log.debug("Redisson configuration: {}", config.toJSON());
-        return Redisson.create(config);
-    }
+	// Redisson Client 설정
+	@Bean
+	public RedissonClient redissonClient() throws IOException {
+		String host = redisHost + ":" + redisPort;
+		log.debug("Redisson Client Host (without trailing slash): {}", host);
+		Config config = new Config();
+		config.useSingleServer().setAddress(host);
+		log.debug("Redisson configuration: {}", config.toJSON());
+		return Redisson.create(config);
+	}
 }

@@ -10,11 +10,11 @@ import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 @EnableScheduling
 public class SchedulerConfig implements SchedulingConfigurer {
 
-    @Override
-    public void configureTasks(final ScheduledTaskRegistrar taskRegistrar) {
-        ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
-        taskScheduler.setPoolSize(5);
-        taskScheduler.initialize();
-        taskRegistrar.setTaskScheduler(taskScheduler);
-    }
+	@Override
+	public void configureTasks(final ScheduledTaskRegistrar taskRegistrar) {
+		ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
+		taskScheduler.setPoolSize(5);
+		taskScheduler.initialize();
+		taskRegistrar.setTaskScheduler(taskScheduler);
+	}
 }

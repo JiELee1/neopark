@@ -1,15 +1,16 @@
 package com.prgrms.be.intermark.domain.newerd.queue.schduler;
 
-import com.prgrms.be.intermark.domain.newerd.queue.model.entity.WaitingQueue;
-import com.prgrms.be.intermark.domain.newerd.queue.model.enums.QueueStatus;
-import com.prgrms.be.intermark.domain.newerd.queue.repository.WaitingQueueReader;
-import com.prgrms.be.intermark.domain.newerd.queue.service.WaitingQueueService;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
+
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import com.prgrms.be.intermark.domain.newerd.queue.model.entity.WaitingQueue;
+import com.prgrms.be.intermark.domain.newerd.queue.model.enums.QueueStatus;
+import com.prgrms.be.intermark.domain.newerd.queue.service.WaitingQueueService;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * [ 대기열 활성화 스케줄러 구현 이유 ]
@@ -29,26 +30,26 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class WaitingQueueScheduler {
-    private final WaitingQueueService waitingQueueService;
+	private final WaitingQueueService waitingQueueService;
 
-    @Scheduled(fixedDelayString = "5000")  // 5초마다 실행
-    public void activateWaitingQueue() {
-        log.info("대기열 활성화 스케줄러 실행");
-        // TODO: 한 번에 1000개씩 활성화 <- 서버 부하를 고려하여 적절한 수치로 조정이 필요
-        final List<WaitingQueue> waitingQueues = waitingQueueService.getWaitingQueuesToBeActivated(1000);
+	@Scheduled(fixedDelayString = "5000")  // 5초마다 실행
+	public void activateWaitingQueue() {
+		log.info("대기열 활성화 스케줄러 실행");
+		// TODO: 한 번에 1000개씩 활성화 <- 서버 부하를 고려하여 적절한 수치로 조정이 필요
+		final List<WaitingQueue> waitingQueues = waitingQueueService.getWaitingQueuesToBeActivated(1000);
 
-        // 대기열이 없으면 종료
-        if (waitingQueues == null) {
-            return;
-        }
-        waitingQueues.forEach(waitingQueue -> {
-            try {
-                if (waitingQueue.getStatus() == QueueStatus.WAITING) {
-                    waitingQueueService.activateQueue(waitingQueue.getToken());
-                }
-            } catch (Exception e) {
-                log.warn("대기열 활성화 중 오류 발생 (Token: {}): {}", waitingQueue.getToken(), e.getMessage());
-            }
-        });
-    }
+		// 대기열이 없으면 종료
+		if (waitingQueues == null) {
+			return;
+		}
+		waitingQueues.forEach(waitingQueue -> {
+			try {
+				if (waitingQueue.getStatus() == QueueStatus.WAITING) {
+					waitingQueueService.activateQueue(waitingQueue.getToken());
+				}
+			} catch (Exception e) {
+				log.warn("대기열 활성화 중 오류 발생 (Token: {}): {}", waitingQueue.getToken(), e.getMessage());
+			}
+		});
+	}
 }

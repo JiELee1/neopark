@@ -7,6 +7,10 @@ plugins {
     id 'checkstyle'
 }
 
+// 코딩 컨벤션 관련
+compileJava.options.encoding = 'UTF-8'
+compileTestJava.options.encoding = 'UTF-8'
+
 group = 'com.prgrms.be'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
@@ -85,7 +89,7 @@ asciidoctor {
     dependsOn test
 }
 
-bootJar{
+bootJar {
     dependsOn asciidoctor
     copy {
         from "${asciidoctor.outputDir}"
