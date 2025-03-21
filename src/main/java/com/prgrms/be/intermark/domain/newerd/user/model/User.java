@@ -50,7 +50,7 @@ public class User {
 	private String refreshToken;
 
 	@Column(name = "is_deleted", nullable = false)
-	private boolean isDeleted;
+	private boolean deleted;
 
 	@Nullable
 	@Column(name = "birth")
