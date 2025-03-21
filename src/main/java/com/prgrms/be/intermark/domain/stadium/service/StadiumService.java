@@ -19,12 +19,14 @@ public class StadiumService {
 
 	public Stadium findById(Long stadiumId) {
 		return stadiumRepository.findById(stadiumId)
-			.orElseThrow(() -> {
-				throw new EntityNotFoundException("존재하지 않는 공연장입니다");
-			});
+			.orElseThrow(() -> new EntityNotFoundException("존재하지 않는 공연장입니다"));
 	}
 
 	public boolean isExistId(Long stadiumId) {
 		return stadiumRepository.existsById(stadiumId);
+	}
+
+	public boolean isNotExist(long stadiumId) {
+		return !stadiumRepository.existsById(stadiumId);
 	}
 }

@@ -50,7 +50,7 @@ public class UserService {
 		String socialId = oauth2User.getName();
 		GrantedAuthority[] grantedAuthorities = oauth2User.getAuthorities().toArray(new GrantedAuthority[0]);
 		UserRole authority = UserRole.valueOf(grantedAuthorities[0].getAuthority());
-		log.info("oauth2User에서 꺼내온 Authority : {}", authority);
+		log.info("oauth2User 에서 꺼내온 Authority : {}", authority);
 		OAuthAttribute authAttribute = OAuthAttribute.of(socialType, socialId, authority, oauth2User.getAttributes());
 		User foundedUser = findByProviderAndProviderId(socialType, socialId)
 			.map(user -> {
@@ -137,5 +137,9 @@ public class UserService {
 
 	public boolean existsById(Long userId) {
 		return userRepository.existsById(userId);
+	}
+
+	public boolean nonExistId(Long userId) {
+		return !userRepository.existsById(userId);
 	}
 }

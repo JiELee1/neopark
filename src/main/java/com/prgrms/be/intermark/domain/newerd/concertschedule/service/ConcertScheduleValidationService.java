@@ -15,12 +15,46 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ConcertScheduleValidationService {
 
 	private final ConcertScheduleRepository concertScheduleRepository;
 
+	public void checkConcertScheduleCreateRequestIsPossible(ConcertScheduleCreateServiceRequest request) {
+		boolean isConflictScheduleExist = concertScheduleRepository.isConflictScheduleExist(
+			request.getStartTime(),
+			request.getEndTime(),
+			request.getStadiumId());
+
+		if (isConflictScheduleExist) {
+			throw new ConflictScheduleException(request.getStartTime(), request.getEndTime());
+		}
+	}
+
+	public void checkScheduleIsInConcertPeriod(ConcertScheduleCreateServiceRequest request, ConcertResponse concert) {
+		boolean isAvailableSchedule = isScheduleInConcertPeriod(concert, request);
+		if (!isAvailableSchedule) {
+			throw new InAvailableScheduleException(concert, request);
+		}
+	}
+
+	public boolean isScheduleInConcertPeriod(ConcertResponse concert, ConcertScheduleCreateServiceRequest schedule) {
+		LocalDate scheduleStartDate = schedule.getStartTime().toLocalDate();
+		LocalDate scheduleEndDate = schedule.getEndTime().toLocalDate();
+
+		return !scheduleStartDate.isBefore(concert.getStartDate())
+			&& !scheduleEndDate.isAfter(concert.getEndDate());
+	}
+
 	public ConcertSchedule findAvailableConcertSchedule(Long scheduleId) {
-		return concertScheduleRepository.findByIdAndStartTimeLessThan(scheduleId, LocalDateTime.now())
+		LocalDateTime now = LocalDateTime.now();
+		return concertScheduleRepository.findByIdAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(scheduleId, now,
+				now)
 			.orElseThrow(() -> new EntityNotFoundException("존재하지 않거나 이미 지난 스케줄입니다"));
+	}
+
+	public ConcertSchedule findById(Long concertScheduleId) {
+		return concertScheduleRepository.findById(concertScheduleId)
+			.orElseThrow(() -> new EntityNotFoundException("해당 아이디에 대한 공연 일정이 존재하지 않습니다."));
 	}
 }

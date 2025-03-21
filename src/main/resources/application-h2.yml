@@ -2,6 +2,7 @@ jwt:
   secret:
     access: "${JWT_SECRET_ACCESS}"
     refresh: "${JWT_SECRET_REFRESH}"
+
 server:
   tomcat:
     accept-count: 100
@@ -9,12 +10,27 @@ server:
       min-spare: 500
       max: 1000
     max-connections: 50000
+  error:
+    include-message: always
+
+local:
+  images:
+    path: "${LOCAL_STORAGE_PATH:/Users/gimjingyu/Desktop/java/project/neopark/neopark/}"
+
 
 spring:
   data:
     redis:
       host: "${REDIS_HOST:127.0.0.1}"
       port: "${REDIS_PORT:6379}"
+
+  config:
+    import:
+      optional:file:spring.env[.properties]
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 20MB
 
   #  h2:
   #    console:
@@ -46,8 +62,7 @@ spring:
       # connection-test-query: SELECT 1  # JDBC4 이상에서는 불필요하나, 필요시 활성 커넥션 검증을 위해 사용
   jpa:
     hibernate:
-      ddl-auto: create-drop
-      show-sql: true
+      ddl-auto: create
     defer-datasource-initialization: true
     properties:
       hibernate:
@@ -58,6 +73,8 @@ spring:
   sql:
     init:
       mode: always
+      data-locations: classpath:insert.sql
+
   security:
     oauth2:
       client:

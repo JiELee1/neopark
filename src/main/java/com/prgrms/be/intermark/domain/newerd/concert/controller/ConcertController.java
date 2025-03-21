@@ -1,22 +1,82 @@
 package com.prgrms.be.intermark.domain.newerd.concert.controller;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import java.net.URI;
+import java.time.LocalDateTime;
+import java.util.List;
 
-@Controller
-@RequestMapping("/api/v1/concerts")
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.prgrms.be.intermark.common.dto.ErrorResponse;
+import com.prgrms.be.intermark.common.dto.ResponseDTO;
+import com.prgrms.be.intermark.common.dto.page.PageResponseDTO;
+import com.prgrms.be.intermark.common.exception.domain.concert.DuplicatedConcertException;
+import com.prgrms.be.intermark.domain.newerd.concert.dto.ConcertCreateRequest;
+import com.prgrms.be.intermark.domain.newerd.concert.dto.ConcertResponse;
+import com.prgrms.be.intermark.domain.newerd.concert.model.Concert;
+import com.prgrms.be.intermark.domain.newerd.concert.service.ConcertService;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@RestController
+@RequestMapping("/api/v2/concerts")
 public class ConcertController {
 
-	/*
-		@PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
-		public ResponseEntity<Void> createMusical(
-			@RequestPart @Valid MusicalCreateRequestDTO createRequestDto,
-			@RequestPart(required = false) MultipartFile thumbnail,
-			@RequestPart(required = false) List<MultipartFile> detailImages
-		) {
-		Long musicalId = musicalFacadeService.create(createRequestDto, thumbnail, detailImages);
-		URI location = URI.create("/api/v1/musicals/" + musicalId);
-		return ResponseEntity.created(location).build();
+	@Autowired
+	private final ConcertService concertService;
 
-	}*/
+	@ResponseStatus(HttpStatus.CONFLICT)
+	@ExceptionHandler(DuplicatedConcertException.class)
+	public ErrorResponse createConcertDuplicatedExHandler(DuplicatedConcertException ex) {
+		log.error("[exceptionHandler] ex", ex);
+		return ErrorResponse.of(
+			HttpStatus.CONFLICT,
+			ex.getMessage(),
+			LocalDateTime.now());
+	}
+
+	public ConcertController(ConcertService concertService) {
+		this.concertService = concertService;
+	}
+
+	@PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
+	public ResponseEntity<Object> createConcert(
+		@RequestPart(value = "concertCreateRequest") @Valid ConcertCreateRequest concertCreateRequest,
+		@RequestPart(value = "thumbnail") MultipartFile thumbnail,
+		@RequestPart(value = "detailImages") List<MultipartFile> detailImages
+	) {
+		Long concertId = concertService.create(concertCreateRequest.toServiceRequest(), thumbnail, detailImages);
+		return ResponseEntity.created(
+				URI.create("/api/v2/concerts/" + concertId))
+			.build();
+	}
+
+	@GetMapping
+	public ResponseDTO<PageResponseDTO<Concert, ConcertResponse>> getAllConcerts(Pageable pageable) {
+		PageResponseDTO<Concert, ConcertResponse> allConcertPages = concertService.findAllPages(pageable);
+		return ResponseDTO.ok(allConcertPages);
+	}
+
+	@GetMapping("/{concertId}")
+	public ResponseDTO<ConcertResponse> getMusical(@PathVariable("concertId") Long concertId) {
+
+		ConcertResponse concertResponse = concertService.findByConcertId(concertId);
+
+		return ResponseDTO.ok(concertResponse);
+	}
 }

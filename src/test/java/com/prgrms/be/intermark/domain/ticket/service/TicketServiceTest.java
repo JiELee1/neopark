@@ -25,9 +25,9 @@ import org.springframework.data.domain.PageRequest;
 import com.prgrms.be.intermark.common.dto.page.PageListIndexSize;
 import com.prgrms.be.intermark.common.dto.page.PageResponseDTO;
 import com.prgrms.be.intermark.common.service.page.PageService;
-import com.prgrms.be.intermark.domain.concert.model.Genre;
+import com.prgrms.be.intermark.domain.musical.model.Genre;
 import com.prgrms.be.intermark.domain.musical.model.Musical;
-import com.prgrms.be.intermark.domain.concert.model.ViewRating;
+import com.prgrms.be.intermark.domain.musical.model.ViewRating;
 import com.prgrms.be.intermark.domain.musical.repository.MusicalRepository;
 import com.prgrms.be.intermark.domain.schedule.model.Schedule;
 import com.prgrms.be.intermark.domain.schedule_seat.model.ScheduleSeat;
@@ -127,7 +127,7 @@ class TicketServiceTest {
 			.thenReturn(any(Ticket.class));
 
 		// when
-		ticketService.createTicket(request);
+		ticketService.createTicket(request, "asd");
 
 		// then
 		verify(userRepository).findByIdAndIsDeletedFalse(request.userId());
@@ -149,7 +149,7 @@ class TicketServiceTest {
 			.thenThrow(EntityNotFoundException.class);
 
 		// when, then
-		assertThatThrownBy(() -> ticketService.createTicket(request))
+		assertThatThrownBy(() -> ticketService.createTicket(request, "asd"))
 			.isExactlyInstanceOf(EntityNotFoundException.class);
 	}
 
@@ -168,7 +168,7 @@ class TicketServiceTest {
 			.thenThrow(EntityNotFoundException.class);
 
 		// when, then
-		assertThatThrownBy(() -> ticketService.createTicket(request))
+		assertThatThrownBy(() -> ticketService.createTicket(request, "asd"))
 			.isExactlyInstanceOf(EntityNotFoundException.class);
 	}
 
@@ -189,7 +189,7 @@ class TicketServiceTest {
 			.thenReturn(Optional.of(isReservedScheduleSeat));
 
 		// when, then
-		assertThatThrownBy(() -> ticketService.createTicket(request))
+		assertThatThrownBy(() -> ticketService.createTicket(request, "asd"))
 			.isExactlyInstanceOf(IllegalArgumentException.class)
 			.hasMessage("이미 예약된 좌석입니다.");
 	}
@@ -213,7 +213,7 @@ class TicketServiceTest {
 			.thenReturn(Optional.of(pastScheduleSeat));
 
 		// when, then
-		assertThatThrownBy(() -> ticketService.createTicket(request))
+		assertThatThrownBy(() -> ticketService.createTicket(request, "asd"))
 			.isExactlyInstanceOf(IllegalArgumentException.class)
 			.hasMessage("이미 지난 스케줄입니다.");
 	}

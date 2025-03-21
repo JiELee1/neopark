@@ -22,5 +22,11 @@ public class UserValidationService {
 			.orElseThrow(() -> new EntityNotFoundException("존재하지 않은 유저입니다."));
 	}
 
+	public void checkIsExist(Long userId) {
+		boolean isExist = userRepositoryTobe.existsById(userId);
+		if (!isExist) {
+			throw new EntityNotFoundException("해당 아이디를 가진 유저가 존재하지 않습니다.");
+		}
+	}
 
 }
