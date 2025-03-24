@@ -8,6 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.Positive;
 
+import com.prgrms.be.intermark.common.entity.BaseEntity;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +22,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-public class SeatInfoTobe {
+public class SeatInfoTobe extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,6 +53,10 @@ public class SeatInfoTobe {
 
 	@Column(name = "is_reserved")
 	private boolean reserved = false; // 기본값을 false로 설정
+
+	//	@Version
+	//	@Column(name = "version", nullable = false)
+	//	private Long version;
 
 	public void reserve() {
 		this.reserved = true;

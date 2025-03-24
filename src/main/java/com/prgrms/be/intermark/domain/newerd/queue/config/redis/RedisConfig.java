@@ -68,14 +68,15 @@ public class RedisConfig {
 		return new GenericJackson2JsonRedisSerializer(objectMapper);
 	}
 
-	// Redisson Client 설정
+	//Redisson Client 설정
 	@Bean
 	public RedissonClient redissonClient() throws IOException {
-		String host = redisHost + ":" + redisPort;
+		String host = REDISSON_HOST_PREFIX + redisHost + ":" + redisPort;
 		log.debug("Redisson Client Host (without trailing slash): {}", host);
 		Config config = new Config();
 		config.useSingleServer().setAddress(host);
 		log.debug("Redisson configuration: {}", config.toJSON());
 		return Redisson.create(config);
 	}
+
 }
