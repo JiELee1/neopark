@@ -23,4 +23,9 @@ public class BookingValidationService {
 			.orElseThrow(() -> new EntityNotFoundException("존재하지 않거나 이미 취소된 예매내역입니다"));
 	}
 
+	public BookingHistory findById(Long bookingId) {
+		return bookingHistoryRepository.findById(bookingId)
+			.orElseThrow(() -> new EntityNotFoundException("존재하지 않는 예매내역입니다"));
+	}
+
 }
