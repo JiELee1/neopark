@@ -13,4 +13,12 @@ public class ResponseDTO<T> {
 	private ApiStatus status;
 	private String error;
 	private T data;
+
+	public static <T> ResponseDTO<T> success(T data) {
+		return new ResponseDTO<>(ApiStatus.SUCCESS, null, data);
+	}
+
+	public static ResponseDTO<Void> success() {
+		return new ResponseDTO<>(ApiStatus.SUCCESS, null, null);
+	}
 }

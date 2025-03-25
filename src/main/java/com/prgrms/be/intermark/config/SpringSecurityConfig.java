@@ -1,5 +1,9 @@
 package com.prgrms.be.intermark.config;
 
+import com.prgrms.be.intermark.auth.*;
+import com.prgrms.be.intermark.domain.user.UserRole;
+import com.prgrms.be.intermark.domain.user.repository.UserRepository;
+import com.prgrms.be.intermark.domain.user.service.UserService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -107,4 +111,5 @@ public class SpringSecurityConfig {
 	public TokenAuthenticationFilter tokenAuthenticationFilter() {
 		return new TokenAuthenticationFilter(tokenProvider, userRepository);
 	}
+
 }

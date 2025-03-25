@@ -1,15 +1,15 @@
 package com.prgrms.be.intermark.domain.util;
 
-import com.prgrms.be.intermark.domain.concert.model.Genre;
+import java.time.LocalDate;
+
+import com.prgrms.be.intermark.domain.musical.model.Genre;
 import com.prgrms.be.intermark.domain.musical.model.Musical;
-import com.prgrms.be.intermark.domain.concert.model.ViewRating;
+import com.prgrms.be.intermark.domain.musical.model.ViewRating;
 import com.prgrms.be.intermark.domain.stadium.model.Stadium;
 import com.prgrms.be.intermark.domain.user.User;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class MusicalProvider {

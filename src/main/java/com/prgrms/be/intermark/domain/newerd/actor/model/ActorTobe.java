@@ -31,8 +31,6 @@ public class ActorTobe extends BaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	private Long actorUid;
-
 	@NotBlank
 	@Column(name = "name", nullable = false, length = 20)
 	private String name;

@@ -1,16 +1,9 @@
 package com.prgrms.be.intermark.domain.schedule.repository;
 
-import com.prgrms.be.intermark.domain.concert.model.Genre;
-import com.prgrms.be.intermark.domain.musical.model.Musical;
-import com.prgrms.be.intermark.domain.concert.model.ViewRating;
-import com.prgrms.be.intermark.domain.musical.repository.MusicalRepository;
-import com.prgrms.be.intermark.domain.schedule.model.Schedule;
-import com.prgrms.be.intermark.domain.stadium.model.Stadium;
-import com.prgrms.be.intermark.domain.stadium.repository.StadiumRepository;
-import com.prgrms.be.intermark.domain.user.SocialType;
-import com.prgrms.be.intermark.domain.user.User;
-import com.prgrms.be.intermark.domain.user.UserRole;
-import com.prgrms.be.intermark.domain.user.repository.UserRepository;
+import static org.assertj.core.api.Assertions.*;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,10 +12,17 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import com.prgrms.be.intermark.domain.musical.model.Genre;
+import com.prgrms.be.intermark.domain.musical.model.Musical;
+import com.prgrms.be.intermark.domain.musical.model.ViewRating;
+import com.prgrms.be.intermark.domain.musical.repository.MusicalRepository;
+import com.prgrms.be.intermark.domain.schedule.model.Schedule;
+import com.prgrms.be.intermark.domain.stadium.model.Stadium;
+import com.prgrms.be.intermark.domain.stadium.repository.StadiumRepository;
+import com.prgrms.be.intermark.domain.user.SocialType;
+import com.prgrms.be.intermark.domain.user.User;
+import com.prgrms.be.intermark.domain.user.UserRole;
+import com.prgrms.be.intermark.domain.user.repository.UserRepository;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)

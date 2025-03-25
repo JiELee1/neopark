@@ -21,9 +21,9 @@ import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.prgrms.be.intermark.domain.concert.model.Genre;
+import com.prgrms.be.intermark.domain.musical.model.Genre;
 import com.prgrms.be.intermark.domain.musical.model.Musical;
-import com.prgrms.be.intermark.domain.concert.model.ViewRating;
+import com.prgrms.be.intermark.domain.musical.model.ViewRating;
 import com.prgrms.be.intermark.domain.musical.repository.MusicalRepository;
 import com.prgrms.be.intermark.domain.musical_seat.repository.MusicalSeatRepository;
 import com.prgrms.be.intermark.domain.schedule.dto.ScheduleCreateRequestDTO;
