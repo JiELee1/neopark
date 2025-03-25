@@ -77,10 +77,8 @@ public class ConcertScheduleController {
 
 	@GetMapping
 	public ResponseDTO<PageResponseDTO<ConcertSchedule, ConcertScheduleResponse>> getAllSchedules(Pageable pageable) {
-
 		PageResponseDTO<ConcertSchedule, ConcertScheduleResponse> allSchedules
 			= concertScheduleService.findAllSchedules(pageable);
-
 		return ResponseDTO.success(allSchedules);
 	}
 

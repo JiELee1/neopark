@@ -76,9 +76,9 @@ public class MusicalFacadeService {
 
 		// 파일 저장 후 경로 받아옴.  원본파일이름과 저장경로
 		List<ImageResponseDTO> detailImagesInfo = imageUploadService.uploadImages(detailImages, DETAIL_IMAGES_PATH);
-
 		List<MusicalDetailImage> musicalDetailImages = setMusicalDetailImagesAssociation(detailImagesInfo,
 			savedMusical);
+
 		musicalDetailImageService.save(musicalDetailImages);
 
 		List<SeatGrade> seatGrades = setSeatGradesAssociation(createRequestDto.seatGrades(), savedMusical);

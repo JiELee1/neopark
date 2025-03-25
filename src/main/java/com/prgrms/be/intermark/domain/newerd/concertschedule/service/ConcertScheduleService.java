@@ -75,7 +75,9 @@ public class ConcertScheduleService {
 
 	public PageResponseDTO<ConcertSchedule, ConcertScheduleResponse> findAllSchedules(Pageable pageable) {
 		Page<ConcertSchedule> schedulePages = concertScheduleRepository.findAll(pageable);
+
 		return new PageResponseDTO<>(schedulePages, ConcertScheduleResponse::of,
 			PageListIndexSize.SCHEDULE_LIST_INDEX_SIZE);
 	}
+
 }

@@ -74,7 +74,7 @@ public class ConcertService {
 	}
 
 	private void checkUserIsExist(Long managerId) {
-		userValidationService.checkIsExist(managerId);
+		userValidationService.checkIsExist(managerId); // 결론 좋았다..
 	}
 
 	private void saveConcertDetailsImages(List<ImageResponseDTO> detailImagesInfo, Long concertId) {
@@ -101,6 +101,7 @@ public class ConcertService {
 		return concertCreateRequest.concertActorRegisterDTOS()
 			.stream()
 			.map(actorInfo -> {
+				// TODO : 배우가 없다면 디비에 저장하고 처리...
 				ActorTobe actor = actorValidationService.findActiveActor(actorInfo.actorId());
 				return CastingInfo.builder()
 					.actorId(actor.getId())
