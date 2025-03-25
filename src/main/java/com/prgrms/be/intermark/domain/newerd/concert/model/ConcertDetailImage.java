@@ -48,18 +48,13 @@ public class ConcertDetailImage extends BaseEntity {
 	}
 
 	public static List<ConcertDetailImage> fromImagesAndConcertId(
-			List<ImageResponseDTO> detailImages, long concertId) {
+		List<ImageResponseDTO> detailImages, long concertId) {
 		return detailImages.stream()
-				.map(imageResponse -> ConcertDetailImage.builder()
-						.concertId(concertId)
-						.originalFileName(imageResponse.originalFileName())
-						.imagePath(imageResponse.path())
-						.build()
-				).toList();
+			.map(imageResponse -> ConcertDetailImage.builder()
+				.concertId(concertId)
+				.originalFileName(imageResponse.originalFileName())
+				.imagePath(imageResponse.path())
+				.build()
+			).toList();
 	}
-
-	public void deleteMusicalDetailImage() {
-		this.isDeleted = true;
-	}
-
 }

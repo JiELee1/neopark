@@ -68,18 +68,10 @@ public class MusicalFacadeService {
 	) {
 
 		Musical createdMusical = createRequestDto.toEntity();
-
-		// thumnail MultipartFile 을 THUMBNAIL_PATH 하위에 저장,
-		// 그 후 원본파일이름과 파일저장경로 반환
 		ImageResponseDTO thumbnailInfo = imageUploadService.uploadImage(thumbnail, THUMBNAIL_PATH);
-
-		// 스타디움 id가 있어야 함.
 		Stadium stadium = stadiumService.findById(createRequestDto.stadiumId());
-
 		User manager = userService.findByIdForFacade(createRequestDto.managerId());
-
 		setMusicalAssociation(createdMusical, thumbnailInfo, stadium, manager);
-
 		Musical savedMusical = musicalService.save(createdMusical);
 
 		// 파일 저장 후 경로 받아옴.  원본파일이름과 저장경로

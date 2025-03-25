@@ -11,4 +11,10 @@ public interface ImageUploadService {
 	ImageResponseDTO uploadImage(MultipartFile multipartFile, String subPath);
 
 	List<ImageResponseDTO> uploadImages(List<MultipartFile> multipartFiles, String subPath);
+
+	ImageResponseDTO getExpectedImageInfo(MultipartFile multipartFile, String subPath);
+
+	List<ImageResponseDTO> getExpectedImagesInfo(List<MultipartFile> multipartFiles, String subPath);
+
+	void saveFile(MultipartFile multipartFile, String path);
 }

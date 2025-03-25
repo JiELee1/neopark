@@ -1,9 +1,5 @@
 package com.prgrms.be.intermark.config;
 
-import com.prgrms.be.intermark.auth.*;
-import com.prgrms.be.intermark.domain.user.UserRole;
-import com.prgrms.be.intermark.domain.user.repository.UserRepository;
-import com.prgrms.be.intermark.domain.user.service.UserService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,82 +9,103 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.prgrms.be.intermark.auth.CookieOAuth2AuthorizationRequestRepository;
+import com.prgrms.be.intermark.auth.CustomOauth2UserService;
+import com.prgrms.be.intermark.auth.OAuth2AuthenticationSuccessHandler;
+import com.prgrms.be.intermark.auth.OAuthAccessDeniedHandler;
+import com.prgrms.be.intermark.auth.TokenAuthenticationFilter;
+import com.prgrms.be.intermark.auth.TokenProvider;
+import com.prgrms.be.intermark.domain.user.UserRole;
+import com.prgrms.be.intermark.domain.user.repository.UserRepository;
+import com.prgrms.be.intermark.domain.user.service.UserService;
+
 @Configuration
 @EnableWebSecurity
 public class SpringSecurityConfig {
-    private final CustomOauth2UserService customOauth2UserService;
-    private final UserService userService;
-    private final TokenProvider tokenProvider;
-    @Value("${jwt.secret.access}")
-    private String accessSecret;
-    @Value("${jwt.secret.refresh}")
-    private String refreshSecret;
-    private final UserRepository userRepository;
+	private final CustomOauth2UserService customOauth2UserService;
+	private final UserService userService;
+	private final TokenProvider tokenProvider;
+	@Value("${jwt.secret.access}")
+	private String accessSecret;
+	@Value("${jwt.secret.refresh}")
+	private String refreshSecret;
+	private final UserRepository userRepository;
 
-    public SpringSecurityConfig(CustomOauth2UserService customOauth2UserService, UserService userService, TokenProvider tokenProvider,
-                                UserRepository userRepository) {
-        this.customOauth2UserService = customOauth2UserService;
-        this.userService = userService;
-        this.tokenProvider = tokenProvider;
-        this.userRepository = userRepository;
-    }
+	public SpringSecurityConfig(CustomOauth2UserService customOauth2UserService, UserService userService,
+		TokenProvider tokenProvider,
+		UserRepository userRepository) {
+		this.customOauth2UserService = customOauth2UserService;
+		this.userService = userService;
+		this.tokenProvider = tokenProvider;
+		this.userRepository = userRepository;
+	}
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .headers()
-                .frameOptions().disable()
-                .and()
-                .csrf().disable()
-                .formLogin().disable()
-                .httpBasic().disable()
-                .exceptionHandling()
-                //.accessDeniedHandler(oAuthAccessDeniedHandler())
-                .and()
-                .authorizeRequests()
-                .antMatchers("/", "/css/**", "/images/**", "/js/**", "/h2-console/**", "/login**", "/favicon.ico").permitAll()
-                .antMatchers("/api/v1/**").hasAnyAuthority(UserRole.ROLE_USER.getKey(), UserRole.ROLE_ADMIN.getKey(), UserRole.ROLE_SELLER.getKey())
-                .anyRequest().authenticated()
-                .and()
-                .logout()
-                .logoutSuccessUrl("/").permitAll()
-                .and()
-                .oauth2Login()
-                .authorizationEndpoint()
-                .baseUri("/oauth2/authorization") //로그인페이지를 받기위한 서버의 엔드포인트 설정
-                .authorizationRequestRepository(cookieOAuth2AuthorizationRequestRepository())
-                .and()
-                .redirectionEndpoint()
-                .baseUri("/*/oauth2/code/*")
-                .and()
-                .userInfoEndpoint()
-                .userService(customOauth2UserService)
-                .and()
-                .successHandler(oAuth2AuthenticationSuccessHandler(userService));
-        return httpSecurity.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-                .build();
-    }
+	@Bean
+	public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
+		httpSecurity
+			.sessionManagement()
+			.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+			.and()
+			.headers()
+			.frameOptions()
+			.disable()
+			.and()
+			.csrf()
+			.disable()
+			.formLogin()
+			.disable()
+			.httpBasic()
+			.disable()
+			.exceptionHandling()
+			//.accessDeniedHandler(oAuthAccessDeniedHandler())
+			.and()
+			.authorizeRequests()
+			.antMatchers("/api/v2/**", "/", "/css/**", "/images/**", "/js/**", "/h2-console/**", "/login**",
+				"/favicon.ico")
+			.permitAll()
+			.antMatchers("/api/v1/**")
+			.hasAnyAuthority(UserRole.ROLE_USER.getKey(), UserRole.ROLE_ADMIN.getKey(), UserRole.ROLE_SELLER.getKey())
+			.anyRequest()
+			.authenticated()
+			.and()
+			.logout()
+			.logoutSuccessUrl("/")
+			.permitAll()
+			.and()
+			.oauth2Login()
+			.authorizationEndpoint()
+			.baseUri("/oauth2/authorization") //로그인페이지를 받기위한 서버의 엔드포인트 설정
+			.authorizationRequestRepository(cookieOAuth2AuthorizationRequestRepository())
+			.and()
+			.redirectionEndpoint()
+			.baseUri("/*/oauth2/code/*")
+			.and()
+			.userInfoEndpoint()
+			.userService(customOauth2UserService)
+			.and()
+			.successHandler(oAuth2AuthenticationSuccessHandler(userService));
+		return httpSecurity.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+			.build();
+	}
 
-    @Bean
-    public OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler(UserService userService) {
-        return new OAuth2AuthenticationSuccessHandler(userService, tokenProvider);
-    }
+	@Bean
+	public OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler(UserService userService) {
+		return new OAuth2AuthenticationSuccessHandler(userService, tokenProvider);
+	}
 
-    @Bean
-    public CookieOAuth2AuthorizationRequestRepository cookieOAuth2AuthorizationRequestRepository() {
-        return new CookieOAuth2AuthorizationRequestRepository();
-    }
+	@Bean
+	public CookieOAuth2AuthorizationRequestRepository cookieOAuth2AuthorizationRequestRepository() {
+		return new CookieOAuth2AuthorizationRequestRepository();
+	}
 
-    @Bean
-    public OAuthAccessDeniedHandler oAuthAccessDeniedHandler() {
-        return new OAuthAccessDeniedHandler();
-    }
+	@Bean
+	public OAuthAccessDeniedHandler oAuthAccessDeniedHandler() {
+		return new OAuthAccessDeniedHandler();
+	}
 
-    @Bean
-    public TokenAuthenticationFilter tokenAuthenticationFilter() {
-        return new TokenAuthenticationFilter(tokenProvider,userRepository);
-    }
+	@Bean
+	public TokenAuthenticationFilter tokenAuthenticationFilter() {
+		return new TokenAuthenticationFilter(tokenProvider, userRepository);
+	}
+
 }

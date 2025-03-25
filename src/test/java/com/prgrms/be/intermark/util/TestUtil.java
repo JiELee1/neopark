@@ -1,12 +1,15 @@
 package com.prgrms.be.intermark.util;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import com.prgrms.be.intermark.domain.actor.model.Actor;
 import com.prgrms.be.intermark.domain.actor.model.Gender;
 import com.prgrms.be.intermark.domain.casting.model.Casting;
-import com.prgrms.be.intermark.domain.concert.model.Genre;
+import com.prgrms.be.intermark.domain.musical.model.Genre;
 import com.prgrms.be.intermark.domain.musical.model.Musical;
 import com.prgrms.be.intermark.domain.musical.model.MusicalDetailImage;
-import com.prgrms.be.intermark.domain.concert.model.ViewRating;
+import com.prgrms.be.intermark.domain.musical.model.ViewRating;
 import com.prgrms.be.intermark.domain.musical_seat.model.MusicalSeat;
 import com.prgrms.be.intermark.domain.schedule.model.Schedule;
 import com.prgrms.be.intermark.domain.schedule_seat.model.ScheduleSeat;
@@ -16,9 +19,6 @@ import com.prgrms.be.intermark.domain.stadium.model.Stadium;
 import com.prgrms.be.intermark.domain.user.SocialType;
 import com.prgrms.be.intermark.domain.user.User;
 import com.prgrms.be.intermark.domain.user.UserRole;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 public class TestUtil {
 

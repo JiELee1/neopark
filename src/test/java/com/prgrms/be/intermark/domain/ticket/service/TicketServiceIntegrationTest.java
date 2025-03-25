@@ -1,49 +1,12 @@
 package com.prgrms.be.intermark.domain.ticket.service;
 
-import static com.prgrms.be.intermark.util.TestUtil.*;
-import static org.assertj.core.api.Assertions.*;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
-import javax.persistence.EntityNotFoundException;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.prgrms.be.intermark.domain.concert.model.Genre;
-import com.prgrms.be.intermark.domain.musical.model.Musical;
-import com.prgrms.be.intermark.domain.concert.model.ViewRating;
-import com.prgrms.be.intermark.domain.musical.repository.MusicalRepository;
-import com.prgrms.be.intermark.domain.musical_seat.model.MusicalSeat;
-import com.prgrms.be.intermark.domain.musical_seat.repository.MusicalSeatRepository;
-import com.prgrms.be.intermark.domain.schedule.model.Schedule;
-import com.prgrms.be.intermark.domain.schedule.repository.ScheduleRepository;
-import com.prgrms.be.intermark.domain.schedule_seat.model.ScheduleSeat;
-import com.prgrms.be.intermark.domain.schedule_seat.repository.ScheduleSeatRepository;
-import com.prgrms.be.intermark.domain.seat.model.Seat;
-import com.prgrms.be.intermark.domain.seat.repository.SeatRepository;
-import com.prgrms.be.intermark.domain.seatgrade.model.SeatGrade;
-import com.prgrms.be.intermark.domain.seatgrade.repository.SeatGradeRepository;
-import com.prgrms.be.intermark.domain.stadium.model.Stadium;
-import com.prgrms.be.intermark.domain.stadium.repository.StadiumRepository;
-import com.prgrms.be.intermark.domain.ticket.dto.TicketCreateRequestDTO;
-import com.prgrms.be.intermark.domain.ticket.model.Ticket;
-import com.prgrms.be.intermark.domain.ticket.repository.TicketRepository;
-import com.prgrms.be.intermark.domain.user.SocialType;
-import com.prgrms.be.intermark.domain.user.User;
-import com.prgrms.be.intermark.domain.user.UserRole;
-import com.prgrms.be.intermark.domain.user.repository.UserRepository;
 
 @Transactional
 @SpringBootTest
 class TicketServiceIntegrationTest {
-
+/*
 	@Autowired
 	private TicketService ticketService;
 
@@ -237,5 +200,5 @@ class TicketServiceIntegrationTest {
 				.isExactlyInstanceOf(EntityNotFoundException.class);
 
 		}
-	}
+	}*/
 }

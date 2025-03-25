@@ -33,9 +33,12 @@ out/
 /nbdist/
 /.nb-gradle/
 
+
+.env*
+img/*
 ### VS Code ###
 .vscode/
 
 ### 환경변수 설정파일 ###
 ### 원격 저장소에 절대올라가면 안됨 ###
-**.env
+spring.env

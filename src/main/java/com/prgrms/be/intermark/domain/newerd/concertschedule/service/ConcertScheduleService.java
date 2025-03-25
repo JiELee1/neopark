@@ -1,16 +1,19 @@
 package com.prgrms.be.intermark.domain.newerd.concertschedule.service;
 
-import javax.persistence.EntityNotFoundException;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.prgrms.be.intermark.common.dto.page.PageListIndexSize;
+import com.prgrms.be.intermark.common.dto.page.PageResponseDTO;
+import com.prgrms.be.intermark.domain.newerd.concert.dto.ConcertResponse;
 import com.prgrms.be.intermark.domain.newerd.concert.model.Concert;
-import com.prgrms.be.intermark.domain.newerd.concert.repository.ConcertRepository;
-import com.prgrms.be.intermark.domain.newerd.concertschedule.dto.ConcertScheduleCreateRequestDTO;
-import com.prgrms.be.intermark.domain.newerd.concertschedule.dto.ConcertScheduleUpdateRequestDTO;
+import com.prgrms.be.intermark.domain.newerd.concert.service.ConcertValidationService;
+import com.prgrms.be.intermark.domain.newerd.concertschedule.dto.ConcertScheduleCreateServiceRequest;
 import com.prgrms.be.intermark.domain.newerd.concertschedule.model.ConcertSchedule;
 import com.prgrms.be.intermark.domain.newerd.concertschedule.repository.ConcertScheduleRepository;
+import com.prgrms.be.intermark.domain.newerd.stadium.service.StadiumValidationService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -19,129 +22,60 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ConcertScheduleService {
 
-	// TODO : ERD가 변경됨에 따라 내부 로직이 달라져서, 기능 구현은 필요 시 진행하면 될 듯 합니다.
-
 	private final ConcertScheduleRepository concertScheduleRepository;
-
-	// TODO : 해당 공연장에서 일정 생성 가능한지 체크 필요, 서비스에 의존할지 레포지토리에 의존할지 결정해야 할듯.
-
-	private ConcertRepository concertRepository;
-
-	@Transactional
-	public Long createSchedule(ConcertScheduleCreateRequestDTO requestDto) {
-		Concert concert = concertRepository.findById(requestDto.concertId())
-			.orElseThrow(() -> new EntityNotFoundException("해당 공연이 존재하지 않습니다."));
-
-		// TODO : 공연 일정을 설정할 수 있는지 확인. 쿼리 재설정 필요.
-	/*	int duplicatedSchedulesNum = concertScheduleRepository.getSchedulesNumByStartTime(
-			requestDto.getStartTime(),
-			requestDto.getEndTime(concert),
-			concert.getStadiumId());
-		if (duplicatedSchedulesNum > 0) {
-			throw new IllegalStateException("해당 시작 시간에 이미 다른 스케줄이 존재합니다.");
-		}*/
-
-		// TODO : 일정 생성이 가능하다면 ConcertSchedule 엔티티 생성
-		//ConcertSchedule schedule = concertScheduleRepository.save(공연);
-
-		// 기존코드
-		//Schedule schedule = scheduleRepository.save(requestDto.toEntity(musical));
-
-		return concert.getId();
-	}
+	private final StadiumValidationService stadiumValidationService;
+	private final ConcertScheduleValidationService concertScheduleValidationService;
+	private final ConcertValidationService concertValidationService;
 
 	@Transactional
-	public void updateSchedule(Long scheduleId, ConcertScheduleUpdateRequestDTO requestDto) {
-		// TODO : 공연일정 수정 로직 변경
-		ConcertSchedule schedule = concertScheduleRepository.findById(scheduleId)
-			.orElseThrow(() -> new EntityNotFoundException("해당 스케줄이 존재하지 않습니다."));
+	public Long create(ConcertScheduleCreateServiceRequest request) {
 
-		if (schedule.isDeleted()) {
-			throw new EntityNotFoundException("해당 스케줄이 존재하지 않습니다.");
-		}
+		/**
+		 *  기존에는 공연 기간을 고려하지 않고, 겹치는 공연장과 공연시간만 고려함.
+		 */
 
-		//
-		/*LocalDateTime startTime = requestDto.getStartTime();
-		LocalDateTime endTime = requestDto.getEndTime(schedule.getC());
+		// 1.공연장 존재여부 확인 및 공연 조회
+		checkStadiumIsExist(request);
+		ConcertResponse concert = findConcertById(request);
 
-		int duplicatedSchedulesNum = scheduleRepository.getDuplicatedScheduleExceptById(
-			scheduleId,
-			startTime,
-			endTime,
-			schedule.getMusical().getStadium());
-		if (duplicatedSchedulesNum > 0) {
-			throw new IllegalStateException("해당 시작 시간에 이미 다른 스케줄이 존재합니다.");
-		}
+		// 2. 조회한 공연의 공연 기간 내에서 공연 일정을 잡을 수 있는지 확인.
+		checkScheduleIsInConcertPeriod(request, concert);
 
-		schedule.setScheduleTime(startTime, endTime);*/
+		// 3. 해당 공연장에서 겹치는 시간대의 다른 공연이 있는지 확인
+		checkConcertScheduleIsAvailable(request);
+
+		// 4. 공연 일정 저장
+		ConcertSchedule concertSchedule = request.toEntity();
+		ConcertSchedule savedConcertSchedule = concertScheduleRepository.save(concertSchedule);
+
+		return savedConcertSchedule.getId();
 	}
 
-	@Transactional
-	public void deleteSchedule(Long scheduleId) {
-		ConcertSchedule schedule = concertScheduleRepository.findById(scheduleId)
-			.orElseThrow(() -> new EntityNotFoundException("해당 스케줄이 존재하지 않습니다."));
-
-		//List<Ticket> tickets = schedule.getTickets().stream().filter((Ticket::isReserved)).toList();
-
-	/*	if (tickets.size() > 0) {
-			throw new IllegalStateException("예매된 스케줄은 삭제할 수 없습니다.");
-		}
-
-		if (schedule.isDeleted()) {
-			throw new EntityNotFoundException("이미 삭제된 스케줄입니다.");
-		}*/
-
-		schedule.deleteSchedule();
+	private void checkStadiumIsExist(ConcertScheduleCreateServiceRequest request) {
+		stadiumValidationService.checkIsExist(request.getStadiumId());
 	}
 
-	/*@Transactional(readOnly = true)
-	public ScheduleSeatResponseDTOs findScheduleSeats(Long scheduleId) {
-		List<ScheduleSeatResponseDTO> scheduleSeats
-			= scheduleSeatRepository.findAllByScheduleId(scheduleId)
-			.stream()
-			.map(ScheduleSeatResponseDTO::from)
-			.toList();
-
-		return ScheduleSeatResponseDTOs.builder()
-			.scheduleSeats(scheduleSeats)
-			.build();
+	private ConcertResponse findConcertById(ConcertScheduleCreateServiceRequest request) {
+		Concert concert = concertValidationService.findActiveConcertById(request.getConcertId());
+		return ConcertResponse.of(concert);
 	}
 
-	@Transactional(readOnly = true)
-	public ScheduleFindResponseDTO findSchedule(Long scheduleId) {
-		Schedule schedule = scheduleRepository.findById(scheduleId)
-			.orElseThrow(() -> {
-				throw new EntityNotFoundException("존재하지 않는 스케줄입니다.");
-			});
-
-		return ScheduleFindResponseDTO.from(schedule);
+	private void checkScheduleIsInConcertPeriod(ConcertScheduleCreateServiceRequest request, ConcertResponse concert) {
+		concertScheduleValidationService.checkScheduleIsInConcertPeriod(request, concert);
 	}
 
-	@Transactional(readOnly = true)
-	public PageResponseDTO<Schedule, ScheduleFindResponseDTO> findSchedulesByMusical(Long musicalId,
-		Pageable pageable) {
-		Musical musical = musicalRepository.findById(musicalId)
-			.orElseThrow(() -> {
-				throw new EntityNotFoundException("존재하지 않는 뮤지컬입니다.");
-			});
-
-		Page<Schedule> schedulePage = scheduleRepository.findAllByMusical(musical, pageable);
-
-		return new PageResponseDTO<>(
-			schedulePage,
-			ScheduleFindResponseDTO::from,
-			PageListIndexSize.SCHEDULE_LIST_INDEX_SIZE
-		);
+	private void checkConcertScheduleIsAvailable(ConcertScheduleCreateServiceRequest request) {
+		concertScheduleValidationService.checkConcertScheduleCreateRequestIsPossible(request);
 	}
 
-	@Transactional
-	public void deleteAllByMusical(Musical musical) {
-		scheduleRepository.findByMusicalAndIsDeletedIsFalse(musical)
-			.forEach(Schedule::deleteSchedule);
-
+	public ConcertScheduleResponse findConcertScheduleById(Long concertScheduleId) {
+		ConcertSchedule concertSchedule = concertScheduleValidationService.findById(concertScheduleId);
+		return ConcertScheduleResponse.of(concertSchedule);
 	}
 
-	public boolean existsByMusical(Musical musical) {
-		return scheduleRepository.existsByMusicalAndIsDeletedFalse(musical);
-	}*/
+	public PageResponseDTO<ConcertSchedule, ConcertScheduleResponse> findAllSchedules(Pageable pageable) {
+		Page<ConcertSchedule> schedulePages = concertScheduleRepository.findAll(pageable);
+		return new PageResponseDTO<>(schedulePages, ConcertScheduleResponse::of,
+			PageListIndexSize.SCHEDULE_LIST_INDEX_SIZE);
+	}
 }

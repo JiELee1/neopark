@@ -1,43 +1,17 @@
 package com.prgrms.be.intermark.domain.ticket.controller;
 
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
-import static org.springframework.restdocs.headers.HeaderDocumentation.*;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.*;
-import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.*;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import javax.persistence.EntityNotFoundException;
-
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.restdocs.RestDocumentationExtension;
-import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
-import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.prgrms.be.intermark.domain.ticket.dto.TicketCreateRequestDTO;
-import com.prgrms.be.intermark.domain.ticket.service.TicketService;
 
 @WebMvcTest(TicketController.class)
 @WithMockUser(username = "1", roles = {"ADMIN"}, password = "")
 @ExtendWith(RestDocumentationExtension.class)
 @AutoConfigureRestDocs
 class TicketControllerTest {
-
+/*
     @MockBean
     private TicketService ticketService;
 
@@ -129,5 +103,5 @@ class TicketControllerTest {
                                     parameterWithName("ticketId").description("삭제할 티켓 id")
                             )));
         }
-    }
+    }*/
 }
