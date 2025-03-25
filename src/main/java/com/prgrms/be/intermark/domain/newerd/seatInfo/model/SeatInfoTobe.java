@@ -54,9 +54,13 @@ public class SeatInfoTobe extends BaseEntity {
 	@Column(name = "is_reserved")
 	private boolean reserved = false; // 기본값을 false로 설정
 
-	//	@Version
-	//	@Column(name = "version", nullable = false)
-	//	private Long version;
+	public boolean getReserved() {
+		return this.reserved;
+	}
+
+	// @Version
+	// @Column(name = "version", nullable = false)
+	// private Long version;
 
 	public void reserve() {
 		this.reserved = true;

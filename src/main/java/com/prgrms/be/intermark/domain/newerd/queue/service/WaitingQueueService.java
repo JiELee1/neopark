@@ -77,8 +77,6 @@ public class WaitingQueueService {
 	 * 활성 대기열 만료 처리
 	 * @param token 대기열 토큰 정보
 	 */
-
-	// TODO: 추후 좌석 예매가 완료되면 해당 대기열을 만료 처리하는 로직 추가
 	public void expireActiveQueue(final String token) {
 		// 1. 현재 활성화된 대기열 만료
 		WaitingQueue currentQueue = waitingQueueReader.getActiveQueueByToken(token);

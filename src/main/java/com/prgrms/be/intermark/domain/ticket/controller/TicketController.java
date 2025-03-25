@@ -1,5 +1,19 @@
 package com.prgrms.be.intermark.domain.ticket.controller;
 
+import java.net.URI;
+
+import javax.validation.Valid;
+
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.prgrms.be.intermark.common.dto.page.PageResponseDTO;
 import com.prgrms.be.intermark.domain.ticket.dto.TicketCreateRequestDTO;
 import com.prgrms.be.intermark.domain.ticket.dto.TicketResponseByMusicalDTO;
@@ -10,14 +24,6 @@ import com.prgrms.be.intermark.domain.ticket.service.TicketService;
 
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-
-import java.net.URI;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/tickets")
@@ -27,27 +33,12 @@ public class TicketController {
 
 	@PostMapping("/create")
 	public ResponseEntity<Void> createTicket(
-		@RequestHeader("Authorization") String token,
 		@RequestBody @Valid TicketCreateRequestDTO ticketCreateRequestDTO) {
-
-		Long ticketId = ticketService.createTicket(ticketCreateRequestDTO, token);
+		Long ticketId = ticketService.createTicket(ticketCreateRequestDTO);
 
 		return ResponseEntity.created(
 			URI.create("/api/v1/tickets/" + ticketId)
 		).build();
-	}
-
-	@PostMapping
-	public ResponseEntity<String> createTicket1(
-		@RequestHeader("Authorization") String token,
-		@RequestBody @Valid TicketCreateRequestDTO ticketCreateRequestDTO
-	) {
-		Long ticketId = ticketService.createTicket(ticketCreateRequestDTO, token);
-		String message = String.format("%s 님이 %d번째 좌석을 예매하였습니다.", ticketCreateRequestDTO.getUserId(),
-			ticketCreateRequestDTO.getScheduleSeatId());
-		String ticketInfo = String.format("\n고객님의 티켓번호는 %d입니다.", ticketId);
-
-		return ResponseEntity.ok(message + ticketInfo);
 	}
 
 	@GetMapping

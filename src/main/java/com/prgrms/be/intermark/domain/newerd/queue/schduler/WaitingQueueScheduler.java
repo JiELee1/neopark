@@ -37,7 +37,7 @@ public class WaitingQueueScheduler {
 	public void activateWaitingQueue() {
 		log.info("대기열 활성화 스케줄러 실행");
 		// TODO: 한 번에 1000개씩 활성화 <- 서버 부하를 고려하여 적절한 수치로 조정이 필요
-		final List<WaitingQueue> waitingQueues = waitingQueueService.getWaitingQueuesToBeActivated(1000);
+		final List<WaitingQueue> waitingQueues = waitingQueueService.getWaitingQueuesToBeActivated(300);
 
 		// 대기열이 없으면 종료
 		if (waitingQueues == null) {

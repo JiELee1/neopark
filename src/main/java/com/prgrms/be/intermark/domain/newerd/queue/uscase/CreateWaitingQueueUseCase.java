@@ -13,8 +13,14 @@ public class CreateWaitingQueueUseCase {
 
 	private final WaitingQueueService waitingQueueService;
 
-	public WaitingQueue createWaitingQueue(final Long userId, final String token) {
+	public WaitingQueue createWaitingQueueToken(final Long userId, final String token) {
 		WaitingQueue waitingQueue = waitingQueueService.createWaitingQueue(userId, token);
+		log.debug("대기열 생성 완료: {}", waitingQueue.toString());
+		return waitingQueue;
+	}
+
+	public WaitingQueue createWaitingQueueId(final Long userId) {
+		WaitingQueue waitingQueue = waitingQueueService.createWaitingQueue(userId, userId.toString());
 		log.debug("대기열 생성 완료: {}", waitingQueue.toString());
 		return waitingQueue;
 	}

@@ -26,4 +26,5 @@ public class SeatInfoValidationService {
 		return seatInfoRepositoryTobe.findByIdAndReserved(seatInfoId, true)
 			.orElseThrow(() -> new EntityNotFoundException("존재하지 않거나 이미 취소된 좌석입니다"));
 	}
+
 }

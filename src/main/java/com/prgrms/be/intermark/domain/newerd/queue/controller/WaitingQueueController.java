@@ -32,11 +32,10 @@ public class WaitingQueueController {
 		@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader
 	) {
 		String token = extractToken(authorizationHeader);
-		final WaitingQueue waitingQueue = createWaitingQueueUseCase.createWaitingQueue(
+		final WaitingQueue waitingQueue = createWaitingQueueUseCase.createWaitingQueueId(
 			Long.valueOf(tokenProvider.getUserIdFromAccessToken(
 				token
-			)),
-			token);
+			)));
 
 		return ResponseEntity.status(201)
 			.body(CreateWaitingQueueResponse.of(waitingQueue));

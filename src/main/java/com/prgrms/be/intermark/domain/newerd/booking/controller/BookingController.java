@@ -21,7 +21,6 @@ import com.prgrms.be.intermark.domain.newerd.booking.service.BookingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-
 @Slf4j
 @RequestMapping("/api/v2/bookings")
 @RequiredArgsConstructor
@@ -31,13 +30,15 @@ public class BookingController {
 	private final BookingService bookingService;
 
 	@PostMapping
-	public ResponseEntity<ResponseDTO<?>> reserveConcert(@RequestBody @Valid ReserveConcertRequest reserveConcertRequest){
-		bookingService.reserveConcert(reserveConcertRequest);
+	public ResponseEntity<ResponseDTO<?>> reserveConcert(
+		@RequestBody @Valid ReserveConcertRequest reserveConcertRequest) {
+		bookingService.reserveConcert_Locking(reserveConcertRequest);
 		return ResponseEntity.status(HttpStatus.CREATED).body(ResponseDTO.builder().status(ApiStatus.SUCCESS).build());
 	}
 
 	@PatchMapping("/{bookingId}")
-	public ResponseEntity<ResponseDTO<?>> cancelConcert(@AuthenticationPrincipal User user, @PathVariable Long bookingId){
+	public ResponseEntity<ResponseDTO<?>> cancelConcert(@AuthenticationPrincipal User user,
+		@PathVariable Long bookingId) {
 		bookingService.cancelConcert(Long.valueOf(user.getUsername()), bookingId);
 		return ResponseEntity.ok().body(ResponseDTO.builder().status(ApiStatus.SUCCESS).build());
 	}
