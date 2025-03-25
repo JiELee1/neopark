@@ -100,13 +100,13 @@ public class StadiumControllerTobe {
 	@GetMapping
 	public ResponseDTO<PageResponseDTO<StadiumTobe, StadiumResponse>> getAllStadiums(Pageable pageable) {
 		PageResponseDTO<StadiumTobe, StadiumResponse> pages = stadiumService.findAllStadiums(pageable);
-		return ResponseDTO.ok(pages);
+		return ResponseDTO.success(pages);
 	}
 
 	@GetMapping("/{stadiumId}")
 	public ResponseDTO<StadiumResponse> getStadium(@PathVariable("stadiumId") Long stadiumId) {
 		StadiumResponse stadiumResponse = stadiumService.findStadiumById(stadiumId);
-		return ResponseDTO.ok(stadiumResponse);
+		return ResponseDTO.success(stadiumResponse);
 	}
 
 }

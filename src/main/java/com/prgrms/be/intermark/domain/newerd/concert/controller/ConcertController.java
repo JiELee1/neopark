@@ -69,7 +69,7 @@ public class ConcertController {
 	@GetMapping
 	public ResponseDTO<PageResponseDTO<Concert, ConcertResponse>> getAllConcerts(Pageable pageable) {
 		PageResponseDTO<Concert, ConcertResponse> allConcertPages = concertService.findAllPages(pageable);
-		return ResponseDTO.ok(allConcertPages);
+		return ResponseDTO.success(allConcertPages);
 	}
 
 	@GetMapping("/{concertId}")
@@ -77,6 +77,6 @@ public class ConcertController {
 
 		ConcertResponse concertResponse = concertService.findByConcertId(concertId);
 
-		return ResponseDTO.ok(concertResponse);
+		return ResponseDTO.success(concertResponse);
 	}
 }

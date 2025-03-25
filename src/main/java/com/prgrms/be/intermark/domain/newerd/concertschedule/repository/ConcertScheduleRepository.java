@@ -15,7 +15,7 @@ public interface ConcertScheduleRepository extends JpaRepository<ConcertSchedule
 		    SELECT COUNT(s) > 0 
 			FROM ConcertSchedule s
 			WHERE 1=1  
-				AND s.isDeleted = false
+				AND s.deleted = false
 				AND s.startTime <= :endTime
 			    AND s.endTime >= :startTime
 				AND s.stadiumId = :stadiumId

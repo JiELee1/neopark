@@ -1,11 +1,8 @@
 package com.prgrms.be.intermark.domain.newerd.booking.service;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.prgrms.be.intermark.domain.newerd.booking.dto.BookingHistoryCondition;
 import com.prgrms.be.intermark.domain.newerd.booking.dto.BookingHistoryResponse;
 import com.prgrms.be.intermark.domain.newerd.booking.dto.ReserveConcertRequest;
 import com.prgrms.be.intermark.domain.newerd.booking.model.BookingHistory;
@@ -51,7 +48,7 @@ public class BookingService {
 		bookingHistory.cancel();
 	}
 
-	//TODO 코드 합치고 response 더 추가해야함
+/*	//TODO 코드 합치고 response 더 추가해야함
 	public Page<BookingHistoryResponse> getBookingHistoryPage(BookingHistoryCondition bookingHistoryCondition,
 		Pageable pageable) {
 		Page<BookingHistory> bookingHistoryPage = bookingHistoryRepository.findAllByUserIdAndConcertId(
@@ -60,7 +57,7 @@ public class BookingService {
 			UserTobe user = userValidationService.findActiveUser(b.getUserId());
 			return b.toBookingHistoryResponse(user);
 		});
-	}
+	}*/
 
 	public BookingHistoryResponse getBookingHistory(Long bookingId) {
 		BookingHistory bookingHistory = bookingValidationService.findById(bookingId);
