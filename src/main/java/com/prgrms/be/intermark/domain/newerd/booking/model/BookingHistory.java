@@ -1,7 +1,22 @@
 package com.prgrms.be.intermark.domain.newerd.booking.model;
 
-import javax.persistence.*;
-import lombok.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import com.prgrms.be.intermark.domain.newerd.booking.dto.BookingHistoryResponse;
+import com.prgrms.be.intermark.domain.newerd.user.model.UserTobe;
+
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "booking_history")
@@ -39,6 +54,14 @@ public class BookingHistory {
 
 	public void cancel() {
 		this.status = BookingStatus.CANCELLED;
+	}
+
+	public BookingHistoryResponse toBookingHistoryResponse(UserTobe user) {
+		return BookingHistoryResponse.builder()
+			.bookingStatus(status)
+			.nickname(user.getNickname())
+			.bookingId(id)
+			.build();
 	}
 
 }
