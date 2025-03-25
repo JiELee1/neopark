@@ -62,7 +62,8 @@ spring:
       # connection-test-query: SELECT 1  # JDBC4 이상에서는 불필요하나, 필요시 활성 커넥션 검증을 위해 사용
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: create-drop
+      show-sql: true
     defer-datasource-initialization: true
     properties:
       hibernate:

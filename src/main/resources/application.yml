@@ -11,7 +11,10 @@ local:
 spring:
   profiles:
     active: dev  # 기본 프로파일을 dev로 설정
-
+  data:
+    redis:
+      host: "${REDIS_HOST:127.0.0.1}"
+      port: "${REDIS_PORT:6379}"
   # 환경변수를 통해 설정하는 경우 아래 주석 해제 가능
   config:
     import: optional:file:spring.env[.properties]
@@ -23,13 +26,17 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: create
+    defer-datasource-initialization: true
     properties:
       hibernate:
         show-sql: true
         format_sql: true
     database: mysql
     database-platform: org.hibernate.dialect.MySQL8Dialect
+  sql:
+    init:
+      mode: always
   # 파일 업로드 및 서블릿 관련 설정은 테스트에서 필요하지 않으므로 주석 처리
   # servlet:
   #   multipart:

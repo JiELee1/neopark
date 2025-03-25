@@ -7,6 +7,10 @@ plugins {
     id 'checkstyle'
 }
 
+// 코딩 컨벤션 관련
+compileJava.options.encoding = 'UTF-8'
+compileTestJava.options.encoding = 'UTF-8'
+
 group = 'com.prgrms.be'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
@@ -67,8 +71,10 @@ dependencies {
 
     // redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-    implementation group: 'org.redisson', name: 'redisson', version: '3.2.0'
     implementation group: 'io.github.cdimascio', name: 'java-dotenv', version: '5.2.2'
+
+    // redisson
+    implementation 'org.redisson:redisson-spring-boot-starter:3.45.1'
 
 }
 
@@ -85,7 +91,7 @@ asciidoctor {
     dependsOn test
 }
 
-bootJar{
+bootJar {
     dependsOn asciidoctor
     copy {
         from "${asciidoctor.outputDir}"

@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.prgrms.be.intermark.common.entity.BaseEntity;
 import com.prgrms.be.intermark.domain.newerd.booking.dto.BookingHistoryResponse;
 import com.prgrms.be.intermark.domain.newerd.user.model.UserTobe;
 
@@ -24,7 +25,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-public class BookingHistory {
+public class BookingHistory extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

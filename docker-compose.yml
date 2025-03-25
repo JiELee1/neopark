@@ -19,5 +19,11 @@ services:
       - "6379:6379"
     restart: always
 
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"   # 레디스 기본 포트
+    restart: always
+
 volumes:
   intermark:
