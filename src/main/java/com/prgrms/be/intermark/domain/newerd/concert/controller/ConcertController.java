@@ -7,6 +7,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,12 +24,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.prgrms.be.intermark.common.dto.ErrorResponse;
 import com.prgrms.be.intermark.common.dto.ResponseDTO;
-import com.prgrms.be.intermark.common.dto.page.PageResponseDTO;
 import com.prgrms.be.intermark.common.exception.domain.concert.DuplicatedConcertException;
 import com.prgrms.be.intermark.domain.newerd.concert.dto.ConcertCreateRequest;
 import com.prgrms.be.intermark.domain.newerd.concert.dto.ConcertResponse;
-import com.prgrms.be.intermark.domain.newerd.concert.model.Concert;
 import com.prgrms.be.intermark.domain.newerd.concert.service.ConcertService;
+import com.prgrms.be.intermark.domain.newerd.concertschedule.dto.ConcertScheduleResponse;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -67,16 +67,23 @@ public class ConcertController {
 	}
 
 	@GetMapping
-	public ResponseDTO<PageResponseDTO<Concert, ConcertResponse>> getAllConcerts(Pageable pageable) {
-		PageResponseDTO<Concert, ConcertResponse> allConcertPages = concertService.findAllPages(pageable);
-		return ResponseDTO.success(allConcertPages);
+	public ResponseDTO<Page<ConcertResponse>> getAllConcerts(Pageable pageable) {
+		Page<ConcertResponse> concertResponses = concertService.findAllPages(pageable);
+		return ResponseDTO.success(concertResponses);
 	}
 
 	@GetMapping("/{concertId}")
 	public ResponseDTO<ConcertResponse> getMusical(@PathVariable("concertId") Long concertId) {
-
 		ConcertResponse concertResponse = concertService.findByConcertId(concertId);
-
 		return ResponseDTO.success(concertResponse);
+	}
+
+	@GetMapping("/{concertId}/schedules")
+	public ResponseDTO<Page<ConcertScheduleResponse>> getSchedules(
+		@PathVariable("concertId") Long concertId, Pageable pageable) {
+		Page<ConcertScheduleResponse> schedulesByConcertId = concertService.findSchedulesByConcertId(concertId,
+			pageable);
+
+		return ResponseDTO.success(schedulesByConcertId);
 	}
 }

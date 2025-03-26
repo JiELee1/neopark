@@ -14,6 +14,7 @@ import javax.persistence.Table;
 
 import com.prgrms.be.intermark.common.entity.BaseEntity;
 import com.prgrms.be.intermark.domain.newerd.concert.dto.ConcertCreateServiceRequest;
+import com.prgrms.be.intermark.domain.newerd.concert.dto.ConcertResponse;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -24,7 +25,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "Concert")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Concert extends BaseEntity {
+public class ConcertTobe extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -65,7 +66,7 @@ public class Concert extends BaseEntity {
 	private boolean deleted;
 
 	@Builder
-	private Concert(
+	private ConcertTobe(
 		String title, ViewRating viewRating, Genre genre,
 		String description, String thumbnailPath, LocalDate startDate, LocalDate endDate,
 		int runningTime, Long userId) {
@@ -81,8 +82,9 @@ public class Concert extends BaseEntity {
 		this.userId = userId;
 	}
 
-	public static Concert createWithThumbnailPath(ConcertCreateServiceRequest createRequestDto, String thumbnailPath) {
-		return Concert.builder()
+	public static ConcertTobe createWithThumbnailPath(ConcertCreateServiceRequest createRequestDto,
+		String thumbnailPath) {
+		return ConcertTobe.builder()
 			.title(createRequestDto.title())
 			.thumbnailPath(thumbnailPath)
 			.viewRating(createRequestDto.viewRating())
@@ -95,8 +97,8 @@ public class Concert extends BaseEntity {
 			.build();
 	}
 
-	public static Concert create(ConcertCreateServiceRequest createRequestDto) {
-		return Concert.builder()
+	public static ConcertTobe create(ConcertCreateServiceRequest createRequestDto) {
+		return ConcertTobe.builder()
 			.title(createRequestDto.title())
 			.viewRating(createRequestDto.viewRating())
 			.genre(createRequestDto.genre())
@@ -105,6 +107,19 @@ public class Concert extends BaseEntity {
 			.endDate(createRequestDto.endDate())
 			.userId(createRequestDto.managerId())
 			.runningTime(createRequestDto.runningTime())
+			.build();
+	}
+
+	public ConcertResponse createResponse() {
+		return ConcertResponse.builder()
+			.title(title)
+			.viewRating(viewRating)
+			.genre(genre)
+			.description(description)
+			.startDate(startDate)
+			.endDate(endDate)
+			.managerId(userId)
+			.runningTime(runningTime)
 			.build();
 	}
 

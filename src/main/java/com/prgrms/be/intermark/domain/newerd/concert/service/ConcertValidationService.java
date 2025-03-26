@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.prgrms.be.intermark.common.exception.domain.concert.DuplicatedConcertException;
-import com.prgrms.be.intermark.domain.newerd.concert.model.Concert;
+import com.prgrms.be.intermark.domain.newerd.concert.model.ConcertTobe;
 import com.prgrms.be.intermark.domain.newerd.concert.repository.ConcertRepository;
 
 @Service
@@ -24,7 +24,7 @@ public class ConcertValidationService {
 		}
 	}
 
-	public Concert findActiveConcertById(Long concertId) {
+	public ConcertTobe findActiveConcertById(Long concertId) {
 		return concertRepository.findById(concertId).orElseThrow(
 			() -> new EntityNotFoundException("존재하지 않는 공연입니다."));
 	}

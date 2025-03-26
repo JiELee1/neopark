@@ -11,11 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-import com.prgrms.be.intermark.domain.newerd.concert.model.Concert;
+import com.prgrms.be.intermark.domain.newerd.concert.model.ConcertTobe;
 import com.prgrms.be.intermark.domain.newerd.concert.model.Genre;
 import com.prgrms.be.intermark.domain.newerd.concert.model.ViewRating;
 import com.prgrms.be.intermark.domain.newerd.concert.repository.ConcertRepository;
-import com.prgrms.be.intermark.domain.newerd.concertschedule.model.ConcertSchedule;
+import com.prgrms.be.intermark.domain.newerd.concertschedule.model.ConcertScheduleTobe;
 import com.prgrms.be.intermark.domain.newerd.stadium.model.StadiumTobe;
 import com.prgrms.be.intermark.domain.newerd.stadium.repository.StadiumRepositoryTobe;
 
@@ -47,13 +47,13 @@ class ConcertScheduleRepositoryTest {
 		LocalDate concertStartDate = LocalDate.of(2020, 1, 1);
 		LocalDate concertEndDate = LocalDate.of(2020, 4, 1);
 
-		Concert concert = createConcert(concertStartDate, concertEndDate, 80);
+		ConcertTobe concert = createConcert(concertStartDate, concertEndDate, 80);
 		StadiumTobe stadium = createStadium();
 
-		Concert savedConcert = concertRepository.save(concert);
+		ConcertTobe savedConcert = concertRepository.save(concert);
 		StadiumTobe savedStadium = stadiumRepository.save(stadium);
 
-		ConcertSchedule concertSchedule = ConcertSchedule.builder()
+		ConcertScheduleTobe concertSchedule = ConcertScheduleTobe.builder()
 			.startTime(scheduleStartTime)
 			.endTime(scheduleEndTime)
 			.concertId(savedConcert.getId())
@@ -73,8 +73,8 @@ class ConcertScheduleRepositoryTest {
 		Assertions.assertThat(conflictScheduleExist).isTrue();
 	}
 
-	private static Concert createConcert(LocalDate startDate, LocalDate endDate, int runningTime) {
-		return Concert.builder()
+	private static ConcertTobe createConcert(LocalDate startDate, LocalDate endDate, int runningTime) {
+		return ConcertTobe.builder()
 			.userId(1L)
 			.title("레미제라블")
 			.viewRating(ViewRating.ADULT)

@@ -5,13 +5,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.prgrms.be.intermark.common.dto.page.PageListIndexSize;
-import com.prgrms.be.intermark.common.dto.page.PageResponseDTO;
 import com.prgrms.be.intermark.domain.newerd.concert.dto.ConcertResponse;
-import com.prgrms.be.intermark.domain.newerd.concert.model.Concert;
+import com.prgrms.be.intermark.domain.newerd.concert.model.ConcertTobe;
 import com.prgrms.be.intermark.domain.newerd.concert.service.ConcertValidationService;
 import com.prgrms.be.intermark.domain.newerd.concertschedule.dto.ConcertScheduleCreateServiceRequest;
-import com.prgrms.be.intermark.domain.newerd.concertschedule.model.ConcertSchedule;
+import com.prgrms.be.intermark.domain.newerd.concertschedule.dto.ConcertScheduleResponse;
+import com.prgrms.be.intermark.domain.newerd.concertschedule.model.ConcertScheduleTobe;
 import com.prgrms.be.intermark.domain.newerd.concertschedule.repository.ConcertScheduleRepository;
 import com.prgrms.be.intermark.domain.newerd.stadium.service.StadiumValidationService;
 
@@ -45,8 +44,8 @@ public class ConcertScheduleService {
 		checkConcertScheduleIsAvailable(request);
 
 		// 4. 공연 일정 저장
-		ConcertSchedule concertSchedule = request.toEntity();
-		ConcertSchedule savedConcertSchedule = concertScheduleRepository.save(concertSchedule);
+		ConcertScheduleTobe concertSchedule = request.toEntity();
+		ConcertScheduleTobe savedConcertSchedule = concertScheduleRepository.save(concertSchedule);
 
 		return savedConcertSchedule.getId();
 	}
@@ -56,8 +55,8 @@ public class ConcertScheduleService {
 	}
 
 	private ConcertResponse findConcertById(ConcertScheduleCreateServiceRequest request) {
-		Concert concert = concertValidationService.findActiveConcertById(request.getConcertId());
-		return ConcertResponse.of(concert);
+		ConcertTobe concert = concertValidationService.findActiveConcertById(request.getConcertId());
+		return concert.createResponse();
 	}
 
 	private void checkScheduleIsInConcertPeriod(ConcertScheduleCreateServiceRequest request, ConcertResponse concert) {
@@ -69,15 +68,17 @@ public class ConcertScheduleService {
 	}
 
 	public ConcertScheduleResponse findConcertScheduleById(Long concertScheduleId) {
-		ConcertSchedule concertSchedule = concertScheduleValidationService.findById(concertScheduleId);
-		return ConcertScheduleResponse.of(concertSchedule);
+		ConcertScheduleTobe concertSchedule = concertScheduleValidationService.findById(concertScheduleId);
+		return concertSchedule.createResponse();
 	}
 
-	public PageResponseDTO<ConcertSchedule, ConcertScheduleResponse> findAllSchedules(Pageable pageable) {
-		Page<ConcertSchedule> schedulePages = concertScheduleRepository.findAll(pageable);
-
-		return new PageResponseDTO<>(schedulePages, ConcertScheduleResponse::of,
-			PageListIndexSize.SCHEDULE_LIST_INDEX_SIZE);
+	public Page<ConcertScheduleResponse> findAllSchedules(Pageable pageable) {
+		Page<ConcertScheduleTobe> schedulePages = concertScheduleRepository.findAll(pageable);
+		return schedulePages.map(ConcertScheduleTobe::createResponse);
 	}
 
+	public Page<ConcertScheduleResponse> findSchedulesByConcertId(Long concertId, Pageable pageable) {
+		Page<ConcertScheduleTobe> concertSchedules = concertScheduleRepository.findByConcertId(concertId, pageable);
+		return concertSchedules.map(ConcertScheduleTobe::createResponse);
+	}
 }

@@ -14,7 +14,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import com.prgrms.be.intermark.common.entity.BaseEntity;
-import com.prgrms.be.intermark.domain.actor.model.Gender;
 
 import lombok.AccessLevel;
 import lombok.Builder;

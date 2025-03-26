@@ -9,6 +9,7 @@ import javax.persistence.Table;
 
 import com.prgrms.be.intermark.common.entity.BaseEntity;
 import com.prgrms.be.intermark.domain.newerd.stadium.dto.StadiumCreateRequest;
+import com.prgrms.be.intermark.domain.newerd.stadium.dto.StadiumResponse;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -48,6 +49,14 @@ public class StadiumTobe extends BaseEntity {
 			.name(stadiumCreateRequest.getName())
 			.address(stadiumCreateRequest.getAddress())
 			.imageUrl(stadiumCreateRequest.getImageUrl())
+			.build();
+	}
+
+	public StadiumResponse createResponse() {
+		return StadiumResponse.builder()
+			.name(name)
+			.address(address)
+			.imageUrl(imageUrl)
 			.build();
 	}
 }
