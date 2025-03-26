@@ -10,6 +10,7 @@ import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import com.prgrms.be.intermark.domain.newerd.booking.dto.BookingHistoryCondition;
+import com.prgrms.be.intermark.domain.newerd.booking.dto.BookingHistoryDTO;
 import com.prgrms.be.intermark.domain.newerd.booking.dto.BookingHistoryResponse;
 import com.prgrms.be.intermark.domain.newerd.booking.dto.ReserveConcertRequest;
 import com.prgrms.be.intermark.domain.newerd.booking.model.BookingHistory;
@@ -17,7 +18,6 @@ import com.prgrms.be.intermark.domain.newerd.booking.repository.BookingHistoryRe
 import com.prgrms.be.intermark.domain.newerd.concertschedule.service.ConcertScheduleValidationService;
 import com.prgrms.be.intermark.domain.newerd.seatInfo.model.SeatInfoTobe;
 import com.prgrms.be.intermark.domain.newerd.seatInfo.service.SeatInfoValidationService;
-import com.prgrms.be.intermark.domain.newerd.user.model.UserTobe;
 import com.prgrms.be.intermark.domain.newerd.user.service.UserValidationService;
 
 import lombok.RequiredArgsConstructor;
@@ -112,21 +112,17 @@ public class BookingService {
 		bookingHistory.cancel();
 	}
 
-	//TODO 코드 합치고 response 더 추가해야함
+	//TODO 쿼리문 다시 살펴보기
 	public Page<BookingHistoryResponse> getBookingHistoryPage(BookingHistoryCondition bookingHistoryCondition,
 		Pageable pageable) {
-		Page<BookingHistory> bookingHistoryPage = bookingHistoryRepository.findAllByUserIdAndConcertId(
+		Page<BookingHistoryDTO> bookingHistoryPage = bookingValidationService.findPageBookingHistoryDTO(
 			bookingHistoryCondition.userId(), bookingHistoryCondition.concertId(), pageable);
-		return bookingHistoryPage.map(b -> {
-			UserTobe user = userValidationService.findUser(b.getUserId());
-			return b.toBookingHistoryResponse(user);
-		});
+		return bookingHistoryPage.map(BookingHistoryDTO::toBookingHistoryResponse);
 	}
 
 	public BookingHistoryResponse getBookingHistory(Long bookingId) {
-		BookingHistory bookingHistory = bookingValidationService.findById(bookingId);
-		UserTobe user = userValidationService.findUser(bookingHistory.getUserId());
-		return bookingHistory.toBookingHistoryResponse(user);
+		BookingHistoryDTO bookingHistory = bookingValidationService.findBookingHistoryDTO(bookingId);
+		return bookingHistory.toBookingHistoryResponse();
 	}
 
 }

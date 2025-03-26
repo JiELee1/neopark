@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import com.prgrms.be.intermark.domain.newerd.booking.dto.BookingHistoryDTO;
 import com.prgrms.be.intermark.domain.newerd.booking.model.BookingHistory;
 import com.prgrms.be.intermark.domain.newerd.booking.model.BookingStatus;
 
@@ -19,17 +20,40 @@ public interface BookingHistoryRepository extends JpaRepository<BookingHistory, 
 	Optional<BookingHistory> findByIdAndUserIdAndStatus(Long bookingId, Long userId, BookingStatus status);
 
 	@Query(value = """
-		SELECT b
+		SELECT new com.prgrms.be.intermark.domain.newerd.booking.dto.BookingHistoryDTO(b.id, b.status, u, c, cs, s, st)
 		FROM BookingHistory b
+		JOIN FETCH UserTobe u ON b.userId = u.id
+		JOIN FETCH ConcertTobe c ON b.concertId = c.id
+		JOIN FETCH ConcertScheduleTobe  cs ON b.concertScheduleId = cs.id
+		JOIN FETCH SeatInfoTobe s ON b.seatId = s.id
+		JOIN FETCH StadiumTobe st ON b.stadiumId = st.id
 		WHERE (:userId IS NULL OR b.userId = :userId)
-		  AND (:concertId IS NULL OR b.concertId = :concertId)
+		AND (:concertId IS NULL OR b.concertId = :concertId)
 		""",
 		countQuery = """
 			SELECT COUNT(b)
 			FROM BookingHistory b
+			JOIN FETCH UserTobe u ON b.userId = u.id
+			JOIN FETCH ConcertTobe c ON b.concertId = c.id
+			JOIN FETCH ConcertScheduleTobe  cs ON b.concertScheduleId = cs.id
+			JOIN FETCH SeatInfoTobe s ON b.seatId = s.id
+			JOIN FETCH StadiumTobe st ON b.stadiumId = st.id
 			WHERE (:userId IS NULL OR b.userId = :userId)
-			  AND (:concertId IS NULL OR b.concertId = :concertId)
+			AND (:concertId IS NULL OR b.concertId = :concertId)
 			""")
-	Page<BookingHistory> findAllByUserIdAndConcertId(@Param("userId") Long userId,
+	Page<BookingHistoryDTO> findBookingHistoryByCondition(@Param("userId") Long userId,
 		@Param("concertId") Long concertId, Pageable pageable);
+
+	@Query(value = """
+		SELECT new com.prgrms.be.intermark.domain.newerd.booking.dto.BookingHistoryDTO(b.id, b.status, u, c, cs, s, st)
+		FROM BookingHistory b
+		JOIN FETCH UserTobe u ON b.userId = u.id
+		JOIN FETCH ConcertTobe c ON b.concertId = c.id
+		JOIN FETCH ConcertScheduleTobe  cs ON b.concertScheduleId = cs.id
+		JOIN FETCH SeatInfoTobe s ON b.seatId = s.id
+		JOIN FETCH StadiumTobe st ON b.stadiumId = st.id
+		WHERE b.id = :bookingId
+		""")
+	Optional<BookingHistoryDTO> findDTOById(@Param("bookingId") Long bookingId);
+
 }
