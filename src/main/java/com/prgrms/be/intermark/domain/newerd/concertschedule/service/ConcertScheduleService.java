@@ -13,6 +13,8 @@ import com.prgrms.be.intermark.domain.newerd.concert.service.ConcertValidationSe
 import com.prgrms.be.intermark.domain.newerd.concertschedule.dto.ConcertScheduleCreateServiceRequest;
 import com.prgrms.be.intermark.domain.newerd.concertschedule.model.ConcertSchedule;
 import com.prgrms.be.intermark.domain.newerd.concertschedule.repository.ConcertScheduleRepository;
+import com.prgrms.be.intermark.domain.newerd.seatInfo.model.SeatInfoTobe;
+import com.prgrms.be.intermark.domain.newerd.seatInfo.service.SeatInfoService;
 import com.prgrms.be.intermark.domain.newerd.stadium.service.StadiumValidationService;
 
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,7 @@ public class ConcertScheduleService {
 	private final StadiumValidationService stadiumValidationService;
 	private final ConcertScheduleValidationService concertScheduleValidationService;
 	private final ConcertValidationService concertValidationService;
+	private final SeatInfoService seatInfoService;
 
 	@Transactional
 	public Long create(ConcertScheduleCreateServiceRequest request) {
@@ -77,5 +80,10 @@ public class ConcertScheduleService {
 		Page<ConcertSchedule> schedulePages = concertScheduleRepository.findAll(pageable);
 		return new PageResponseDTO<>(schedulePages, ConcertScheduleResponse::of,
 			PageListIndexSize.SCHEDULE_LIST_INDEX_SIZE);
+	}
+
+	public Page<SeatInfoTobe> findAllByConcertScheduleId(Long concertScheduleId, Pageable pageable) {
+		return seatInfoService.findAllByConcertScheduleId(
+			concertScheduleId, pageable);
 	}
 }

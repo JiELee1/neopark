@@ -6,7 +6,9 @@ import java.time.LocalDateTime;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -30,6 +32,7 @@ import com.prgrms.be.intermark.domain.newerd.concertschedule.dto.ConcertSchedule
 import com.prgrms.be.intermark.domain.newerd.concertschedule.model.ConcertSchedule;
 import com.prgrms.be.intermark.domain.newerd.concertschedule.service.ConcertScheduleResponse;
 import com.prgrms.be.intermark.domain.newerd.concertschedule.service.ConcertScheduleService;
+import com.prgrms.be.intermark.domain.newerd.seatInfo.model.SeatInfoTobe;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -92,5 +95,13 @@ public class ConcertScheduleController {
 			concertScheduleService.findConcertScheduleById(concertScheduleId);
 
 		return ApiResponse.ok(concertScheduleResponse);
+	}
+
+	@GetMapping("/{concertScheduleId}/seats")
+	public ResponseEntity<Page<SeatInfoTobe>> getSeatsByConcertSchedule(
+		@PathVariable Long concertScheduleId,
+		@PageableDefault(size = 20, sort = "id") Pageable pageable) {
+		Page<SeatInfoTobe> seats = concertScheduleService.findAllByConcertScheduleId(concertScheduleId, pageable);
+		return ResponseEntity.ok(seats);
 	}
 }

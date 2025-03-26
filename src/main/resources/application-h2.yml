@@ -17,12 +17,13 @@ local:
   images:
     path: "${LOCAL_STORAGE_PATH:/Users/gimjingyu/Desktop/java/project/neopark/neopark/}"
 
-
 spring:
   data:
     redis:
-      host: "${REDIS_HOST:127.0.0.1}"
-      port: "${REDIS_PORT:6379}"
+      hosts:
+        - 127.0.0.1:6371
+        - 127.0.0.1:6372
+        - 127.0.0.1:6373
 
   config:
     import:
@@ -46,6 +47,7 @@ spring:
   #    password:
 
   # 환경변수를 통해 설정하는 대신, 테스트용으로 직접 값을 지정합니다.
+
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: "${DB_URL:jdbc:mysql://localhost:3308/mydatabase}"  # 테스트용 DB URL (실제 테스트 환경에 맞게 수정)
@@ -62,7 +64,7 @@ spring:
       # connection-test-query: SELECT 1  # JDBC4 이상에서는 불필요하나, 필요시 활성 커넥션 검증을 위해 사용
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: create
       show-sql: true
     defer-datasource-initialization: true
     properties:
@@ -71,6 +73,7 @@ spring:
         format_sql: true
         dialect: org.hibernate.dialect.MySQL8Dialect
     generate-ddl: true
+
   sql:
     init:
       mode: always

@@ -4,16 +4,20 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.prgrms.be.intermark.domain.newerd.queue.exception.CoreException;
 import com.prgrms.be.intermark.domain.newerd.queue.exception.WaitingQueueErrorType;
 import com.prgrms.be.intermark.domain.newerd.queue.model.dto.WaitingQueueInfo;
 import com.prgrms.be.intermark.domain.newerd.queue.model.entity.WaitingQueue;
+import com.prgrms.be.intermark.domain.newerd.queue.model.enums.QueueStatus;
 import com.prgrms.be.intermark.domain.newerd.queue.repository.WaitingQueueReader;
 import com.prgrms.be.intermark.domain.newerd.queue.repository.WaitingQueueWriter;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class WaitingQueueService {
@@ -92,4 +96,20 @@ public class WaitingQueueService {
 		}
 	}
 
+	/**
+	 * 대기열이 ACTIVATED로 바뀔 때까지 계속 확인
+	 * 스레드가 Interrupted 되면 예외 발생
+	 */
+	@Transactional(readOnly = true)
+	public WaitingQueue waitUntilActivatedNoTimeout(String token) throws InterruptedException {
+		while (true) {
+			WaitingQueueInfo queue = getWaitingQueueInfo(token);
+			if (queue.getStatus() == QueueStatus.ACTIVATED) {
+				log.info("대기열 활성화됨. token={}", token);
+				return queue.getWaitingQueue();
+			}
+			// 0.5초 대기 후 재확인
+			Thread.sleep(500);
+		}
+	}
 }

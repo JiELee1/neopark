@@ -68,6 +68,27 @@ public class RedisConfig {
 		return new GenericJackson2JsonRedisSerializer(objectMapper);
 	}
 
+	// @Bean
+	// public RedissonClient redissonClient() throws IOException {
+	// 	String host = REDISSON_HOST_PREFIX + redisHost + ":" + redisPort;
+	// 	log.debug("Redisson Client Host (without trailing slash): {}", host);
+	//
+	// 	Config config = new Config();
+	//
+	// 	// Redisson 클러스터 모드 설정
+	// 	config.useClusterServers()
+	// 		.addNodeAddress(
+	// 			"redis://localhost:7000", // 클러스터의 각 노드 주소들
+	// 			"redis://localhost:7001",
+	// 			"redis://localhost:7002",
+	// 			"redis://localhost:7003"
+	// 		)
+	// 		.setScanInterval(2000);  // 클러스터의 노드를 스캔하는 주기 설정
+	//
+	// 	log.debug("Redisson configuration: {}", config.toJSON());
+	// 	return Redisson.create(config);
+	// }
+
 	//Redisson Client 설정
 	@Bean
 	public RedissonClient redissonClient() throws IOException {
@@ -78,5 +99,4 @@ public class RedisConfig {
 		log.debug("Redisson configuration: {}", config.toJSON());
 		return Redisson.create(config);
 	}
-
 }

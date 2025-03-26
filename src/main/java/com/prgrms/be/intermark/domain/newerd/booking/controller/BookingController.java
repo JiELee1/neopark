@@ -4,7 +4,6 @@ import java.net.URI;
 
 import javax.validation.Valid;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.prgrms.be.intermark.common.dto.ApiStatus;
 import com.prgrms.be.intermark.common.dto.ResponseDTO;
 import com.prgrms.be.intermark.domain.newerd.booking.dto.BookingHistoryResponse;
 import com.prgrms.be.intermark.domain.newerd.booking.dto.ReserveConcertRequest;
@@ -24,7 +22,6 @@ import com.prgrms.be.intermark.domain.newerd.booking.service.BookingService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 
 @Slf4j
 @RequestMapping("/api/v2/bookings")
@@ -36,8 +33,8 @@ public class BookingController {
 
 	@PostMapping
 	public ResponseEntity<ResponseDTO<?>> reserveConcert(
-		@RequestBody @Valid ReserveConcertRequest reserveConcertRequest) {
-		Long bookingId = bookingService.reserveConcert_Locking(reserveConcertRequest);
+		@RequestBody @Valid ReserveConcertRequest reserveConcertRequest) throws InterruptedException {
+		Long bookingId = bookingService.reserveConcert_redisson(reserveConcertRequest);
 		return ResponseEntity.created(
 			URI.create("/api/v2/bookings/" + bookingId)
 		).body(ResponseDTO.success());

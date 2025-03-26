@@ -1,0 +1,38 @@
+services:
+  redis-0:
+    image: docker.io/bitnami/redis-cluster:7.2
+    ports:
+      - 6371:6379
+      - 17001:17001
+    volumes:
+      - ./redis1.conf:/etc/redis.conf
+    environment:
+      #      - 'REDIS_PASSWORD=bitnami'
+      - 'ALLOW_EMPTY_PASSWORD=yes'
+      - 'REDIS_NODES=redis-0 redis-1 redis-2'
+
+
+  redis-1:
+    image: docker.io/bitnami/redis-cluster:7.2
+    ports:
+      - 6372:6379
+      - 17002:17002
+    volumes:
+      - ./redis2.conf:/etc/redis.conf
+    environment:
+      #      - 'REDIS_PASSWORD=bitnami'
+      - 'ALLOW_EMPTY_PASSWORD=yes'
+      - 'REDIS_NODES=redis-0 redis-1 redis-2'
+
+
+  redis-2:
+    image: docker.io/bitnami/redis-cluster:7.2
+    ports:
+      - 6373:6379
+      - 17003:17003
+    volumes:
+      - ./redis3.conf:/etc/redis.conf
+    environment:
+      #      - 'REDIS_PASSWORD=bitnami'
+      - 'ALLOW_EMPTY_PASSWORD=yes'
+      - 'REDIS_NODES=redis-0 redis-1 redis-2'

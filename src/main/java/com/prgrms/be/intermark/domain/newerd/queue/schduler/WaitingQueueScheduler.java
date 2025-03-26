@@ -1,7 +1,9 @@
 package com.prgrms.be.intermark.domain.newerd.queue.schduler;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -32,25 +34,31 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class WaitingQueueScheduler {
 	private final WaitingQueueService waitingQueueService;
+	private final ApplicationEventPublisher applicationEventPublisher;
 
 	@Scheduled(fixedDelayString = "5000")  // 5초마다 실행
 	public void activateWaitingQueue() {
 		log.info("대기열 활성화 스케줄러 실행");
-		// TODO: 한 번에 1000개씩 활성화 <- 서버 부하를 고려하여 적절한 수치로 조정이 필요
-		final List<WaitingQueue> waitingQueues = waitingQueueService.getWaitingQueuesToBeActivated(300);
+		final List<WaitingQueue> waitingQueues = waitingQueueService.getWaitingQueuesToBeActivated(1000);
 
 		// 대기열이 없으면 종료
 		if (waitingQueues == null) {
 			return;
 		}
+
+		AtomicInteger processedCount = new AtomicInteger();
 		waitingQueues.forEach(waitingQueue -> {
 			try {
 				if (waitingQueue.getStatus() == QueueStatus.WAITING) {
 					waitingQueueService.activateQueue(waitingQueue.getToken());
+					processedCount.getAndIncrement();
+					log.info("대기열 활성화 완료 (Token: {})", waitingQueue.getToken());
+
 				}
 			} catch (Exception e) {
 				log.warn("대기열 활성화 중 오류 발생 (Token: {}): {}", waitingQueue.getToken(), e.getMessage());
 			}
 		});
+		log.error("총 {}개의 대기열이 활성화 처리되었습니다.", processedCount);
 	}
 }
