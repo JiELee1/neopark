@@ -54,6 +54,7 @@ public class StadiumTobe extends BaseEntity {
 
 	public StadiumResponse createResponse() {
 		return StadiumResponse.builder()
+			.id(id)
 			.name(name)
 			.address(address)
 			.imageUrl(imageUrl)
