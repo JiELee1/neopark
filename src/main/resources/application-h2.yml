@@ -18,11 +18,24 @@ local:
     path: "${LOCAL_STORAGE_PATH:/Users/gimjingyu/Desktop/java/project/neopark/neopark/}"
 
 
+
+
 spring:
   data:
     redis:
       host: "${REDIS_HOST:127.0.0.1}"
       port: "${REDIS_PORT:6379}"
+
+  #  data:
+  #    redis:
+  #      cluster:
+  #        hosts:
+  #          - localhost:6371
+  #          - localhost:6372
+  #          - localhost:6373
+  #      password: bitnami
+
+
 
   
   config:
@@ -84,8 +97,20 @@ spring:
               - "email"
               - "profile"
 
+
+
 logging:
   level:
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: OFF
     org.hibernate: OFF
+
+springdoc:
+  packages-to-scan: com.prgrms.be.intermark.domain.newerd
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+  swagger-ui:
+    path: /swagger-ui.html
+    disable-swagger-default-url: true
+    display-request-duration: true
+    operations-sorter: alpha

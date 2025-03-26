@@ -29,7 +29,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "user",
+@Table(name = "user_tobe",
 	uniqueConstraints = {@UniqueConstraint(name = "social_uk", columnNames = {"social_type", "social_id"})})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
