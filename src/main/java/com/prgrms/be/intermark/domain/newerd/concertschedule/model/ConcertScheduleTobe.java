@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import com.prgrms.be.intermark.common.entity.BaseEntity;
+import com.prgrms.be.intermark.domain.newerd.concertschedule.dto.ConcertScheduleResponse;
 
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -20,7 +21,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "concert_schedule")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class ConcertSchedule extends BaseEntity {
+public class ConcertScheduleTobe extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,11 +40,21 @@ public class ConcertSchedule extends BaseEntity {
 	private Long stadiumId;
 
 	@Builder
-	private ConcertSchedule(LocalDateTime startTime, LocalDateTime endTime, Long concertId, Long stadiumId) {
+	private ConcertScheduleTobe(LocalDateTime startTime, LocalDateTime endTime, Long concertId, Long stadiumId) {
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.deleted = false;
 		this.concertId = concertId;
 		this.stadiumId = stadiumId;
+	}
+
+	public ConcertScheduleResponse createResponse() {
+		return ConcertScheduleResponse.builder()
+			.id(id)
+			.concertId(concertId)
+			.stadiumId(stadiumId)
+			.startTime(startTime)
+			.endTime(endTime)
+			.build();
 	}
 }

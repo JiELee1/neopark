@@ -12,7 +12,7 @@ import com.prgrms.be.intermark.common.exception.domain.concertschedule.ConflictS
 import com.prgrms.be.intermark.common.exception.domain.concertschedule.InAvailableScheduleException;
 import com.prgrms.be.intermark.domain.newerd.concert.dto.ConcertResponse;
 import com.prgrms.be.intermark.domain.newerd.concertschedule.dto.ConcertScheduleCreateServiceRequest;
-import com.prgrms.be.intermark.domain.newerd.concertschedule.model.ConcertSchedule;
+import com.prgrms.be.intermark.domain.newerd.concertschedule.model.ConcertScheduleTobe;
 import com.prgrms.be.intermark.domain.newerd.concertschedule.repository.ConcertScheduleRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -52,14 +52,14 @@ public class ConcertScheduleValidationService {
 			&& !scheduleEndDate.isAfter(concert.getEndDate());
 	}
 
-	public ConcertSchedule findAvailableConcertSchedule(Long scheduleId) {
+	public ConcertScheduleTobe findAvailableConcertSchedule(Long scheduleId) {
 		LocalDateTime now = LocalDateTime.now();
 		return concertScheduleRepository.findByIdAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(scheduleId, now,
 				now)
 			.orElseThrow(() -> new EntityNotFoundException("존재하지 않거나 이미 지난 스케줄입니다"));
 	}
 
-	public ConcertSchedule findById(Long concertScheduleId) {
+	public ConcertScheduleTobe findById(Long concertScheduleId) {
 		return concertScheduleRepository.findById(concertScheduleId)
 			.orElseThrow(() -> new EntityNotFoundException("해당 아이디에 대한 공연 일정이 존재하지 않습니다."));
 	}

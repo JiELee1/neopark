@@ -9,8 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.prgrms.be.intermark.common.dto.ImageResponseDTO;
-import com.prgrms.be.intermark.common.dto.page.PageListIndexSize;
-import com.prgrms.be.intermark.common.dto.page.PageResponseDTO;
 import com.prgrms.be.intermark.common.service.ImageUploadService;
 import com.prgrms.be.intermark.domain.newerd.actor.model.ActorTobe;
 import com.prgrms.be.intermark.domain.newerd.actor.service.ActorValidationServiceTobe;
@@ -18,9 +16,11 @@ import com.prgrms.be.intermark.domain.newerd.castinginfo.model.CastingInfo;
 import com.prgrms.be.intermark.domain.newerd.castinginfo.service.CastingInfoServiceTobe;
 import com.prgrms.be.intermark.domain.newerd.concert.dto.ConcertCreateServiceRequest;
 import com.prgrms.be.intermark.domain.newerd.concert.dto.ConcertResponse;
-import com.prgrms.be.intermark.domain.newerd.concert.model.Concert;
 import com.prgrms.be.intermark.domain.newerd.concert.model.ConcertDetailImage;
+import com.prgrms.be.intermark.domain.newerd.concert.model.ConcertTobe;
 import com.prgrms.be.intermark.domain.newerd.concert.repository.ConcertRepository;
+import com.prgrms.be.intermark.domain.newerd.concertschedule.dto.ConcertScheduleResponse;
+import com.prgrms.be.intermark.domain.newerd.concertschedule.service.ConcertScheduleService;
 import com.prgrms.be.intermark.domain.newerd.user.service.UserValidationService;
 
 import lombok.RequiredArgsConstructor;
@@ -42,6 +42,7 @@ public class ConcertService {
 	private final ConcertValidationService concertValidationService;
 	private final UserValidationService userValidationService;
 	private final ActorValidationServiceTobe actorValidationService;
+	private final ConcertScheduleService concertScheduleService;
 
 	@Transactional
 	public Long create(ConcertCreateServiceRequest concertCreateRequest,
@@ -59,7 +60,7 @@ public class ConcertService {
 
 		// 콘서트 저장
 		Long concertId = saveConcert(
-			Concert.createWithThumbnailPath(concertCreateRequest, expectedThumbnailInfo.path()));
+			ConcertTobe.createWithThumbnailPath(concertCreateRequest, expectedThumbnailInfo.path()));
 
 		// 콘서트 상세 이미지 저장
 		saveConcertDetailsImages(expectedDetailImagesInfo, concertId);
@@ -74,7 +75,7 @@ public class ConcertService {
 	}
 
 	private void checkUserIsExist(Long managerId) {
-		userValidationService.checkIsExist(managerId);
+		userValidationService.checkIsExist(managerId); // 결론 좋았다..
 	}
 
 	private void saveConcertDetailsImages(List<ImageResponseDTO> detailImagesInfo, Long concertId) {
@@ -86,14 +87,14 @@ public class ConcertService {
 		castingInfoServiceTobe.saveAll(castingInfoList);
 	}
 
-	private Long saveConcert(Concert concert) {
+	private Long saveConcert(ConcertTobe concert) {
 		checkAvailableToSave(concert);
 
-		Concert savedConcert = concertRepository.save(concert);
+		ConcertTobe savedConcert = concertRepository.save(concert);
 		return savedConcert.getId();
 	}
 
-	private void checkAvailableToSave(Concert concert) {
+	private void checkAvailableToSave(ConcertTobe concert) {
 		concertValidationService.checkSameTitleIsExist(concert.getTitle());
 	}
 
@@ -101,6 +102,7 @@ public class ConcertService {
 		return concertCreateRequest.concertActorRegisterDTOS()
 			.stream()
 			.map(actorInfo -> {
+				// TODO : 배우가 없다면 디비에 저장하고 처리...
 				ActorTobe actor = actorValidationService.findActiveActor(actorInfo.actorId());
 				return CastingInfo.builder()
 					.actorId(actor.getId())
@@ -131,12 +133,16 @@ public class ConcertService {
 	}
 
 	public ConcertResponse findByConcertId(Long concertId) {
-		Concert concert = concertValidationService.findActiveConcertById(concertId);
-		return ConcertResponse.of(concert);
+		ConcertTobe concert = concertValidationService.findActiveConcertById(concertId);
+		return concert.createResponse();
 	}
 
-	public PageResponseDTO<Concert, ConcertResponse> findAllPages(Pageable pageable) {
-		Page<Concert> concertPages = concertRepository.findAll(pageable);
-		return new PageResponseDTO<>(concertPages, ConcertResponse::of, PageListIndexSize.MUSICAL_LIST_INDEX_SIZE);
+	public Page<ConcertResponse> findAllPages(Pageable pageable) {
+		Page<ConcertTobe> concertPages = concertRepository.findAll(pageable);
+		return concertPages.map(ConcertTobe::createResponse);
+	}
+
+	public Page<ConcertScheduleResponse> findSchedulesByConcertId(Long concertId, Pageable pageable) {
+		return concertScheduleService.findSchedulesByConcertId(concertId, pageable);
 	}
 }

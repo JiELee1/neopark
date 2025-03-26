@@ -59,6 +59,6 @@ public class WaitingQueueScheduler {
 				log.warn("대기열 활성화 중 오류 발생 (Token: {}): {}", waitingQueue.getToken(), e.getMessage());
 			}
 		});
-		log.error("총 {}개의 대기열이 활성화 처리되었습니다.", processedCount);
+		log.info("총 {}개의 대기열이 활성화 처리되었습니다.", processedCount);
 	}
 }

@@ -127,7 +127,7 @@ class TicketServiceTest {
 			.thenReturn(any(Ticket.class));
 
 		// when
-		ticketService.createTicket(request, "asd");
+		ticketService.createTicket(request);
 
 		// then
 		verify(userRepository).findByIdAndIsDeletedFalse(request.userId());
@@ -149,7 +149,7 @@ class TicketServiceTest {
 			.thenThrow(EntityNotFoundException.class);
 
 		// when, then
-		assertThatThrownBy(() -> ticketService.createTicket(request, "asd"))
+		assertThatThrownBy(() -> ticketService.createTicket(request))
 			.isExactlyInstanceOf(EntityNotFoundException.class);
 	}
 
@@ -168,7 +168,7 @@ class TicketServiceTest {
 			.thenThrow(EntityNotFoundException.class);
 
 		// when, then
-		assertThatThrownBy(() -> ticketService.createTicket(request, "asd"))
+		assertThatThrownBy(() -> ticketService.createTicket(request))
 			.isExactlyInstanceOf(EntityNotFoundException.class);
 	}
 
@@ -189,7 +189,7 @@ class TicketServiceTest {
 			.thenReturn(Optional.of(isReservedScheduleSeat));
 
 		// when, then
-		assertThatThrownBy(() -> ticketService.createTicket(request, "asd"))
+		assertThatThrownBy(() -> ticketService.createTicket(request))
 			.isExactlyInstanceOf(IllegalArgumentException.class)
 			.hasMessage("이미 예약된 좌석입니다.");
 	}
@@ -213,7 +213,7 @@ class TicketServiceTest {
 			.thenReturn(Optional.of(pastScheduleSeat));
 
 		// when, then
-		assertThatThrownBy(() -> ticketService.createTicket(request, "asd"))
+		assertThatThrownBy(() -> ticketService.createTicket(request))
 			.isExactlyInstanceOf(IllegalArgumentException.class)
 			.hasMessage("이미 지난 스케줄입니다.");
 	}

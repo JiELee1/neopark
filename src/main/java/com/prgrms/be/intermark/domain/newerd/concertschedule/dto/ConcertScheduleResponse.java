@@ -1,8 +1,8 @@
-package com.prgrms.be.intermark.domain.newerd.concertschedule.service;
+package com.prgrms.be.intermark.domain.newerd.concertschedule.dto;
 
 import java.time.LocalDateTime;
 
-import com.prgrms.be.intermark.domain.newerd.concertschedule.model.ConcertSchedule;
+import com.prgrms.be.intermark.domain.newerd.concertschedule.model.ConcertScheduleTobe;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -28,7 +28,7 @@ public class ConcertScheduleResponse {
 		this.endTime = endTime;
 	}
 
-	public static ConcertScheduleResponse of(ConcertSchedule concertSchedule) {
+	public static ConcertScheduleResponse of(ConcertScheduleTobe concertSchedule) {
 		return builder()
 			.id(concertSchedule.getId())
 			.concertId(concertSchedule.getConcertId())

@@ -2,8 +2,11 @@ package com.prgrms.be.intermark.domain.newerd.booking.service;
 
 import javax.persistence.EntityNotFoundException;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.prgrms.be.intermark.domain.newerd.booking.dto.BookingHistoryDTO;
 import com.prgrms.be.intermark.domain.newerd.booking.model.BookingHistory;
 import com.prgrms.be.intermark.domain.newerd.booking.model.BookingStatus;
 import com.prgrms.be.intermark.domain.newerd.booking.repository.BookingHistoryRepository;
@@ -25,6 +28,15 @@ public class BookingValidationService {
 
 	public BookingHistory findById(Long bookingId) {
 		return bookingHistoryRepository.findById(bookingId)
+			.orElseThrow(() -> new EntityNotFoundException("존재하지 않는 예매내역입니다"));
+	}
+
+	public Page<BookingHistoryDTO> findPageBookingHistoryDTO(Long userId, Long concertId, Pageable pageable) {
+		return bookingHistoryRepository.findBookingHistoryByCondition(userId, concertId, pageable);
+	}
+
+	public BookingHistoryDTO findBookingHistoryDTO(Long bookingId) {
+		return bookingHistoryRepository.findDTOById(bookingId)
 			.orElseThrow(() -> new EntityNotFoundException("존재하지 않는 예매내역입니다"));
 	}
 

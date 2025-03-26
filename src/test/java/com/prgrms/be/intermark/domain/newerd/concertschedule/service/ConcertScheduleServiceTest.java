@@ -11,7 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import com.prgrms.be.intermark.domain.newerd.concert.dto.ConcertResponse;
-import com.prgrms.be.intermark.domain.newerd.concert.model.Concert;
+import com.prgrms.be.intermark.domain.newerd.concert.model.ConcertTobe;
 import com.prgrms.be.intermark.domain.newerd.concert.model.Genre;
 import com.prgrms.be.intermark.domain.newerd.concert.model.ViewRating;
 import com.prgrms.be.intermark.domain.newerd.concert.repository.ConcertRepository;
@@ -50,11 +50,11 @@ class ConcertScheduleServiceTest {
 		LocalDate concertEndDate = LocalDate.of(2020, 5, 1);
 		int runningTime = 80;
 
-		Concert concert = createConcert(concertStartDate, concertEndDate, runningTime);
+		ConcertTobe concert = createConcert(concertStartDate, concertEndDate, runningTime);
 		StadiumTobe stadium = createStadium();
 
 		StadiumTobe savedStadium = stadiumRepository.save(stadium);
-		Concert savedConcert = concertRepository.save(concert);
+		ConcertTobe savedConcert = concertRepository.save(concert);
 		ConcertResponse concertResponse = ConcertResponse.of(savedConcert);
 
 		String scheduleStartTime = "2020-03-01 22:40";
@@ -84,11 +84,11 @@ class ConcertScheduleServiceTest {
 		LocalDate concertEndDate = LocalDate.of(2020, 5, 1);
 		int runningTime = 80;
 
-		Concert concert = createConcert(concertStartDate, concertEndDate, runningTime);
+		ConcertTobe concert = createConcert(concertStartDate, concertEndDate, runningTime);
 		StadiumTobe stadium = createStadium();
 
 		StadiumTobe savedStadium = stadiumRepository.save(stadium);
-		Concert savedConcert = concertRepository.save(concert);
+		ConcertTobe savedConcert = concertRepository.save(concert);
 		ConcertResponse concertResponse = ConcertResponse.of(savedConcert);
 
 		String scheduleStartTime = "2020-05-01 23:00";
@@ -118,11 +118,11 @@ class ConcertScheduleServiceTest {
 		LocalDate concertEndDate = LocalDate.of(2020, 5, 1);
 		int runningTime = 80;
 
-		Concert concert = createConcert(concertStartDate, concertEndDate, runningTime);
+		ConcertTobe concert = createConcert(concertStartDate, concertEndDate, runningTime);
 		StadiumTobe stadium = createStadium();
 
 		StadiumTobe savedStadium = stadiumRepository.save(stadium);
-		Concert savedConcert = concertRepository.save(concert);
+		ConcertTobe savedConcert = concertRepository.save(concert);
 		ConcertResponse concertResponse = ConcertResponse.of(savedConcert);
 
 		String scheduleStartTime = "2019-12-31 23:59";
@@ -143,8 +143,8 @@ class ConcertScheduleServiceTest {
 		Assertions.assertThat(scheduleIsInConcertPeriod).isFalse();
 	}
 
-	private static Concert createConcert(LocalDate startDate, LocalDate endDate, int runningTime) {
-		return Concert.builder()
+	private static ConcertTobe createConcert(LocalDate startDate, LocalDate endDate, int runningTime) {
+		return ConcertTobe.builder()
 			.userId(1L)
 			.title("레미제라블")
 			.viewRating(ViewRating.ADULT)

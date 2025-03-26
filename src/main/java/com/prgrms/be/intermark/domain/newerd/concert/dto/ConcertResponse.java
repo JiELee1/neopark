@@ -2,7 +2,7 @@ package com.prgrms.be.intermark.domain.newerd.concert.dto;
 
 import java.time.LocalDate;
 
-import com.prgrms.be.intermark.domain.newerd.concert.model.Concert;
+import com.prgrms.be.intermark.domain.newerd.concert.model.ConcertTobe;
 import com.prgrms.be.intermark.domain.newerd.concert.model.Genre;
 import com.prgrms.be.intermark.domain.newerd.concert.model.ViewRating;
 
@@ -35,7 +35,7 @@ public class ConcertResponse {
 		this.runningTime = runningTime;
 	}
 
-	public static ConcertResponse of(Concert concert) {
+	public static ConcertResponse of(ConcertTobe concert) {
 		return ConcertResponse.builder()
 			.id(concert.getId())
 			.title(concert.getTitle())

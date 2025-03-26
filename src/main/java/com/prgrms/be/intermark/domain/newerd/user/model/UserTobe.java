@@ -1,22 +1,34 @@
 package com.prgrms.be.intermark.domain.newerd.user.model;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.Length;
-import org.springframework.lang.Nullable;
+import java.time.LocalDate;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
+
+import org.hibernate.validator.constraints.Length;
+import org.springframework.lang.Nullable;
+
+import com.prgrms.be.intermark.common.entity.BaseEntity;
+import com.prgrms.be.intermark.domain.newerd.user.dto.UserResponse;
+
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "user")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class UserTobe {
+public class UserTobe extends BaseEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,5 +67,24 @@ public class UserTobe {
 	@Nullable
 	@Column(name = "birth")
 	private LocalDate birth;
+
+	public void activateUser() {
+		this.deleted = false;
+	}
+
+	public void deactivateUser() {
+		this.deleted = true;
+	}
+
+	public void updateRole(UserRoleTobe role) {
+		this.role = role;
+	}
+
+	public UserResponse toUserResponse() {
+		return UserResponse.builder()
+			.email(email)
+			.nickname(nickname)
+			.build();
+	}
 
 }

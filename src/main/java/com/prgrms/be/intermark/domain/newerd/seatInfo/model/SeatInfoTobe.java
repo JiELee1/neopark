@@ -6,15 +6,18 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Version;
 import javax.validation.constraints.Positive;
 
 import com.prgrms.be.intermark.common.entity.BaseEntity;
+import com.prgrms.be.intermark.domain.newerd.seatInfo.dto.SeatInfoResponse;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Table(name = "seat_info")
@@ -22,6 +25,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
+@ToString
 public class SeatInfoTobe extends BaseEntity {
 
 	@Id
@@ -58,9 +62,9 @@ public class SeatInfoTobe extends BaseEntity {
 		return this.reserved;
 	}
 
-	// @Version
-	// @Column(name = "version", nullable = false)
-	// private Long version;
+	@Version
+	@Column(name = "version", nullable = false)
+	private Long version;
 
 	public void reserve() {
 		this.reserved = true;
@@ -68,5 +72,12 @@ public class SeatInfoTobe extends BaseEntity {
 
 	public void cancel() {
 		this.reserved = false;
+	}
+
+	public SeatInfoResponse toResponse() {
+		return SeatInfoResponse.builder()
+			.col(columnNum)
+			.row(rowNum)
+			.build();
 	}
 }

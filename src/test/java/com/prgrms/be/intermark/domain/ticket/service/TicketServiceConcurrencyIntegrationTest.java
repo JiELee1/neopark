@@ -136,7 +136,7 @@ class TicketServiceConcurrencyIntegrationTest {
 		for (int i = 0; i < threadCount; i++) {
 			executorService.submit(() -> {
 				try {
-					ticketService.createTicket(request, "asd");
+					ticketService.createTicket(request);
 				} catch (Exception e) {
 					System.out.println(e.getMessage());
 				} finally {

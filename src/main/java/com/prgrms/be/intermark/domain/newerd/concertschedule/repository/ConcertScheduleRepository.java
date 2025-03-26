@@ -3,21 +3,19 @@ package com.prgrms.be.intermark.domain.newerd.concertschedule.repository;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import com.prgrms.be.intermark.domain.musical.model.Musical;
-import com.prgrms.be.intermark.domain.schedule.model.Schedule;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.prgrms.be.intermark.domain.newerd.concertschedule.model.ConcertSchedule;
+import com.prgrms.be.intermark.domain.newerd.concertschedule.model.ConcertScheduleTobe;
 
-public interface ConcertScheduleRepository extends JpaRepository<ConcertSchedule, Long> {
+public interface ConcertScheduleRepository extends JpaRepository<ConcertScheduleTobe, Long> {
 
 	@Query("""
 		    SELECT COUNT(s) > 0 
-			FROM ConcertSchedule s
+			FROM ConcertScheduleTobe s
 			WHERE 1=1  
 				AND s.deleted = false
 				AND s.startTime <= :endTime
@@ -30,8 +28,12 @@ public interface ConcertScheduleRepository extends JpaRepository<ConcertSchedule
 		@Param("stadiumId") Long stadiumId
 	);
 
-	Optional<ConcertSchedule> findByIdAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(Long id,
+	Optional<ConcertScheduleTobe> findByIdAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(Long id,
 		LocalDateTime curTime1, LocalDateTime curTime2);
 
-	Optional<ConcertSchedule> findByIdAndStartTimeLessThan(Long id, LocalDateTime curTime);
+	Optional<ConcertScheduleTobe> findByIdAndStartTimeLessThan(Long id, LocalDateTime curTime);
+
+	Page<ConcertScheduleTobe> findByConcertId(Long concertId, Pageable pageable);
+
+	// Page<ConcertSchedule> findByConcertId(Long concertId, Page page);
 }
