@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Version;
 import javax.validation.constraints.Positive;
 
 import com.prgrms.be.intermark.common.entity.BaseEntity;
@@ -61,9 +62,9 @@ public class SeatInfoTobe extends BaseEntity {
 		return this.reserved;
 	}
 
-	// @Version
-	// @Column(name = "version", nullable = false)
-	// private Long version;
+	@Version
+	@Column(name = "version", nullable = false)
+	private Long version;
 
 	public void reserve() {
 		this.reserved = true;

@@ -16,6 +16,8 @@ import com.prgrms.be.intermark.domain.newerd.booking.dto.ReserveConcertRequest;
 import com.prgrms.be.intermark.domain.newerd.booking.model.BookingHistory;
 import com.prgrms.be.intermark.domain.newerd.booking.repository.BookingHistoryRepository;
 import com.prgrms.be.intermark.domain.newerd.concertschedule.service.ConcertScheduleValidationService;
+import com.prgrms.be.intermark.domain.newerd.queue.uscase.CreateWaitingQueueUseCase;
+import com.prgrms.be.intermark.domain.newerd.queue.uscase.ExpireActiveQueueUseCase;
 import com.prgrms.be.intermark.domain.newerd.seatInfo.model.SeatInfoTobe;
 import com.prgrms.be.intermark.domain.newerd.seatInfo.service.SeatInfoValidationService;
 import com.prgrms.be.intermark.domain.newerd.user.service.UserValidationService;
@@ -28,18 +30,22 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class BookingService {
-
 	private final UserValidationService userValidationService;
 	private final SeatInfoValidationService seatInfoValidationService;
 	private final ConcertScheduleValidationService concertScheduleValidationService;
 	private final BookingHistoryRepository bookingHistoryRepository;
 	private final BookingValidationService bookingValidationService;
-
 	private final RedissonClient redissonClient;
 
-	//TODO 토큰에서 인증하는걸로 바꿔서 user검증로직은 지울예정
+	// 대기열
+	private final CreateWaitingQueueUseCase createWaitingQueueUseCase;
+	private final ExpireActiveQueueUseCase expireActiveQueueUseCase;
+
+	//TODO 토큰에서 인증하는걸로 바꿔서 user검증 로직은 지울예정
 	@Transactional
-	public Long reserveConcert_Locking(ReserveConcertRequest reserveConcertRequest) {
+	public Long reserveConcert_Locking(ReserveConcertRequest reserveConcertRequest) throws InterruptedException {
+
+		createWaitingQueueUseCase.createWaitingQueueToken(reserveConcertRequest.getUserId());
 		// (1) 사용자 검증 (사용자가 존재하고 활성화 상태인지 확인 후 예외처리)
 		// TODO: 사용자는 현재 존재하지 않으니 주석 처리 (시연할 때, 구지 필요 없으면 주석 처리)
 		//userValidationService.findActiveUser(reserveConcertRequest.userId());
@@ -51,16 +57,21 @@ public class BookingService {
 		//concertScheduleValidationService.findAvailableConcertSchedule(seatInfoTobe.getConcertScheduleId());
 
 		seatInfoTobe.reserve();
-		return bookingHistoryRepository.save(reserveConcertRequest.toBookingHistory(seatInfoTobe)).getId();
+		Long bookingId = bookingHistoryRepository.save(reserveConcertRequest.toBookingHistory(seatInfoTobe)).getId();
+
+		expireActiveQueueUseCase.expireActiveQueue(String.valueOf(reserveConcertRequest.getUserId()));
+		return bookingId;
 	}
 
 	@Transactional
-	public Long reserveConcert_redisson(ReserveConcertRequest reserveConcertRequest) {
+	public Long reserveConcert_redisson(ReserveConcertRequest reserveConcertRequest) throws InterruptedException {
+		//createWaitingQueueUseCase.createWaitingQueueToken(reserveConcertRequest.getUserId());
+		log.error("reserveConcert_redisson : {}", reserveConcertRequest.getUserId());
+
 		// seatId를 기반으로 고유한 락 키 생성
 		RLock rLock = redissonClient.getLock(reserveConcertRequest.getSeatId().toString());
 		rLock.lock();
 		try {
-
 			// (1) 사용자 검증 (사용자가 존재하고 활성화 상태인지 확인 후 예외처리)
 			// TODO: 사용자는 현재 존재하지 않으니 주석 처리 (시연할 때, 구지 필요 없으면 주석 처리)
 			//userValidationService.findActiveUser(reserveConcertRequest.userId());
@@ -101,6 +112,8 @@ public class BookingService {
 				rLock.unlock();
 			}
 			throw e;
+		} finally {
+			//expireActiveQueueUseCase.expireActiveQueue(String.valueOf(reserveConcertRequest.getUserId()));
 		}
 	}
 

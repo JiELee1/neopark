@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,8 +36,8 @@ public class BookingController {
 
 	@PostMapping
 	public ResponseEntity<ResponseDTO<?>> reserveConcert(
-		@RequestBody @Valid ReserveConcertRequest reserveConcertRequest) {
-		Long bookingId = bookingService.reserveConcert_Locking(reserveConcertRequest);
+		@RequestBody @Valid ReserveConcertRequest reserveConcertRequest) throws InterruptedException {
+		Long bookingId = bookingService.reserveConcert_redisson(reserveConcertRequest);
 		return ResponseEntity.created(
 			URI.create("/api/v2/bookings/" + bookingId)
 		).body(ResponseDTO.success());

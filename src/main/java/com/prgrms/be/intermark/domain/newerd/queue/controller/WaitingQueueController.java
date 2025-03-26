@@ -4,6 +4,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,11 +18,12 @@ import com.prgrms.be.intermark.domain.newerd.queue.uscase.CreateWaitingQueueUseC
 import com.prgrms.be.intermark.domain.newerd.queue.uscase.GetWaitingQueueUseCase;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/waiting-queues")
 @RequiredArgsConstructor
-// XXX: (사용 안할 예정) -> WaitingQueueController에서 좌석 예매가 이루어지지는 않음.
 public class WaitingQueueController {
 	private final CreateWaitingQueueUseCase createWaitingQueueUseCase;
 	private final GetWaitingQueueUseCase getWaitingQueueUseCase;
@@ -29,14 +31,16 @@ public class WaitingQueueController {
 
 	@PostMapping
 	public ResponseEntity<CreateWaitingQueueResponse> createWaitingQueue(
-		@RequestHeader(HttpHeaders.AUTHORIZATION) String authorizationHeader
-	) {
-		String token = extractToken(authorizationHeader);
-		final WaitingQueue waitingQueue = createWaitingQueueUseCase.createWaitingQueueId(
-			Long.valueOf(tokenProvider.getUserIdFromAccessToken(
-				token
-			)));
+		@RequestBody Long userId
+	) throws InterruptedException {
+		if (userId == null) {
+			throw new IllegalArgumentException("요청 본문에 userId가 비어있습니다.");
+		}
 
+		// 3) 대기열 생성
+		final WaitingQueue waitingQueue = createWaitingQueueUseCase.createWaitingQueueToken(userId);
+
+		// 4) 응답
 		return ResponseEntity.status(201)
 			.body(CreateWaitingQueueResponse.of(waitingQueue));
 	}
