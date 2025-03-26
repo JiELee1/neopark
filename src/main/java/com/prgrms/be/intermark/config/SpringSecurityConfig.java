@@ -59,8 +59,13 @@ public class SpringSecurityConfig {
 			//.accessDeniedHandler(oAuthAccessDeniedHandler())
 			.and()
 			.authorizeRequests()
-			.antMatchers("/api/v2/**", "/", "/css/**", "/images/**", "/js/**", "/h2-console/**", "/login**",
-				"/favicon.ico")
+			.antMatchers(
+				"/swagger-ui.html",
+				"/swagger-ui/**",
+				"/v3/api-docs/**",
+				"/swagger-resources/**",
+				"/webjars/**",
+				"/", "/css/**", "/images/**", "/js/**", "/h2-console/**", "/login**", "/favicon.ico")
 			.permitAll()
 			.antMatchers("/api/v1/**")
 			.hasAnyAuthority(UserRole.ROLE_USER.getKey(), UserRole.ROLE_ADMIN.getKey(), UserRole.ROLE_SELLER.getKey())
