@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.prgrms.be.intermark.domain.newerd.actor.dto.ActorResponse;
 import com.prgrms.be.intermark.domain.newerd.actor.service.ActorValidationServiceTobe;
 import com.prgrms.be.intermark.domain.newerd.castinginfo.model.CastingInfo;
 import com.prgrms.be.intermark.domain.newerd.castinginfo.repository.CastingInfoRepositoryTobe;
@@ -38,4 +39,7 @@ public class CastingInfoServiceTobe {
 		}
 	}
 
+	public List<ActorResponse> findActorsBy(Long concertId) {
+		return castingInfoRepository.findCastingInfosByConcertId(concertId);
+	}
 }

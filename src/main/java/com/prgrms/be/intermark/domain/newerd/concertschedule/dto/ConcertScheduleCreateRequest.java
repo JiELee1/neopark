@@ -9,8 +9,8 @@ import javax.validation.constraints.Positive;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.prgrms.be.intermark.domain.newerd.concert.dto.ConcertResponse;
-import com.prgrms.be.intermark.domain.newerd.concert.model.Concert;
-import com.prgrms.be.intermark.domain.newerd.concertschedule.model.ConcertSchedule;
+import com.prgrms.be.intermark.domain.newerd.concert.model.ConcertTobe;
+import com.prgrms.be.intermark.domain.newerd.concertschedule.model.ConcertScheduleTobe;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -58,7 +58,7 @@ public class ConcertScheduleCreateRequest {
 		return LocalDateTime.parse(time, formatter);
 	}
 
-	public LocalDateTime getEndTime(Concert concert) {
+	public LocalDateTime getEndTime(ConcertTobe concert) {
 		return getStartTime().plusMinutes(concert.getRunningTime());
 	}
 
@@ -66,8 +66,8 @@ public class ConcertScheduleCreateRequest {
 		return getStartTime().plusMinutes(runningTime);
 	}
 
-	public ConcertSchedule toEntity(Concert concert) {
-		return ConcertSchedule.builder()
+	public ConcertScheduleTobe toEntity(ConcertTobe concert) {
+		return ConcertScheduleTobe.builder()
 			.startTime(getStartTime())
 			.endTime(getEndTime(concert))
 			.concertId(concert.getId())

@@ -3,7 +3,7 @@ package com.prgrms.be.intermark.domain.newerd.concertschedule.dto;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import com.prgrms.be.intermark.domain.newerd.concertschedule.model.ConcertSchedule;
+import com.prgrms.be.intermark.domain.newerd.concertschedule.model.ConcertScheduleTobe;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -31,8 +31,8 @@ public class ConcertScheduleCreateServiceRequest {
 		return LocalDateTime.parse(time, formatter);
 	}
 
-	public ConcertSchedule toEntity() {
-		return ConcertSchedule.builder()
+	public ConcertScheduleTobe toEntity() {
+		return ConcertScheduleTobe.builder()
 			.concertId(concertId)
 			.stadiumId(stadiumId)
 			.startTime(startTime)

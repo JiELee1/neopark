@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,11 +21,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.prgrms.be.intermark.common.dto.ErrorResponse;
 import com.prgrms.be.intermark.common.dto.ResponseDTO;
-import com.prgrms.be.intermark.common.dto.page.PageResponseDTO;
 import com.prgrms.be.intermark.common.exception.domain.stadium.DuplicatedStadiumException;
 import com.prgrms.be.intermark.domain.newerd.stadium.dto.StadiumCreateRequest;
 import com.prgrms.be.intermark.domain.newerd.stadium.dto.StadiumResponse;
-import com.prgrms.be.intermark.domain.newerd.stadium.model.StadiumTobe;
 import com.prgrms.be.intermark.domain.newerd.stadium.repository.StadiumRepositoryTobe;
 import com.prgrms.be.intermark.domain.newerd.stadium.service.StadiumServiceTobe;
 
@@ -98,9 +97,9 @@ public class StadiumControllerTobe {
 	}
 
 	@GetMapping
-	public ResponseDTO<PageResponseDTO<StadiumTobe, StadiumResponse>> getAllStadiums(Pageable pageable) {
-		PageResponseDTO<StadiumTobe, StadiumResponse> pages = stadiumService.findAllStadiums(pageable);
-		return ResponseDTO.success(pages);
+	public ResponseDTO<Page<StadiumResponse>> getAllStadiums(Pageable pageable) {
+		Page<StadiumResponse> stadiums = stadiumService.findAllStadiums(pageable);
+		return ResponseDTO.success(stadiums);
 	}
 
 	@GetMapping("/{stadiumId}")

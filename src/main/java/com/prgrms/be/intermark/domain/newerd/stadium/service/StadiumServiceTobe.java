@@ -8,8 +8,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.prgrms.be.intermark.common.dto.page.PageListIndexSize;
-import com.prgrms.be.intermark.common.dto.page.PageResponseDTO;
 import com.prgrms.be.intermark.common.exception.domain.stadium.DuplicatedStadiumException;
 import com.prgrms.be.intermark.domain.newerd.stadium.dto.StadiumCreateServiceRequest;
 import com.prgrms.be.intermark.domain.newerd.stadium.dto.StadiumResponse;
@@ -37,7 +35,7 @@ public class StadiumServiceTobe {
 		StadiumTobe stadium = request.toEntity();
 		StadiumTobe savedStadium = stadiumRepository.save(stadium);
 
-		return StadiumResponse.of(savedStadium);
+		return savedStadium.createResponse();
 	}
 
 	private void checkDuplicateAddress(StadiumCreateServiceRequest request) {
@@ -60,7 +58,7 @@ public class StadiumServiceTobe {
 		StadiumTobe stadiumTobe = stadiumRepository.findById(stadiumId)
 			.orElseThrow(() -> new EntityNotFoundException("존재하지 않는 공연장입니다."));
 
-		return StadiumResponse.of(stadiumTobe);
+		return stadiumTobe.createResponse();
 	}
 
 	public Page<StadiumResponse> findAll(@PageableDefault(size = 10, sort = "stadiumId") Pageable pageable) {
@@ -68,14 +66,13 @@ public class StadiumServiceTobe {
 		 * 무조건 DTO로 변환해서 넘겨야 한다.
 		 */
 		Page<StadiumTobe> pages = stadiumRepository.findAll(pageable);
-		return pages.map(StadiumResponse::of);
+		return pages.map(StadiumTobe::createResponse);
 
 	}
 
-	public PageResponseDTO<StadiumTobe, StadiumResponse> findAllStadiums(Pageable pageable) {
+	public Page<StadiumResponse> findAllStadiums(Pageable pageable) {
 
 		Page<StadiumTobe> stadiumTobePage = stadiumRepository.findAll(pageable);
-		return new PageResponseDTO<>(stadiumTobePage, StadiumResponse::of, PageListIndexSize.STADIUM_LIST_INDEX_SIZE);
-
+		return stadiumTobePage.map(StadiumTobe::createResponse);
 	}
 }
